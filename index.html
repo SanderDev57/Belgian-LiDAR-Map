@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Belgian LiDAR Map</title>
+<link rel="stylesheet" href="vendor/leaflet/leaflet.css">
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+<section id="privacyGate" class="privacy-gate" aria-labelledby="privacyTitle"><div class="privacy-card"><h1 id="privacyTitle">Belgian LiDAR Map</h1><p>Explore official Belgian terrain and aerial imagery.</p><p>Opening the map connects your browser to OpenStreetMap Belgium / Champs-Libres. Selecting aerial imagery or terrain also connects to Digitaal Vlaanderen and SPW. These providers receive your IP address and the area you view. Place and address searches connect to Photon / komoot when submitted.</p><details><summary>Provider privacy information</summary><p>This viewer requests maps directly from the providers you choose. They receive your IP address, browser/request information and tile coordinates, which reveal the area being viewed. Place and address searches are sent to Photon / komoot only when you press Search or Enter. This service receives your search text, IP address and browser/request information. Coordinate input is processed locally. The application adds no analytics, cookies or browser storage; the current map position is kept in the URL fragment and can be included when you share the link.</p>
+<p><strong>Digitaal Vlaanderen:</strong> the agency processes request logs and IP addresses to secure its geographic services as a task in the public interest. IP addresses are retained for at most 90 days and are accessible to service administrators. You may request access, correction, erasure, restriction or object to processing; objecting may prevent service access. Contact <a href="mailto:privacy@digitaal.vlaanderen.be">privacy@digitaal.vlaanderen.be</a>. See its <a href="https://www.vlaanderen.be/digitaal-vlaanderen/onze-diensten-en-platformen/geografische-webdiensten/gebruiksrecht-en-privacyverklaring-geografische-webdiensten" target="_blank" rel="noopener">full service privacy notice, controller details and complaint information</a>.</p>
+<p><strong>SPW:</strong> consult the <a href="https://geoportail.wallonie.be/vie-privee.html" target="_blank" rel="noopener">SPW privacy notice</a>; privacy contact: <a href="mailto:dpo@spw.wallonie.be">dpo@spw.wallonie.be</a>.</p>
+<p><strong>OpenStreetMap Belgium / Champs-Libres:</strong> street-map requests go to their tile server. See the <a href="https://github.com/osmbe/openstreetmap-carto-be/wiki/Tile-Usage-Policy" target="_blank" rel="noopener">service and attribution policy</a> and <a href="https://www.champs-libres.coop/" target="_blank" rel="noopener">tile provider</a>.</p>
+<p>When this viewer is hosted online, the website host also receives ordinary page requests and may keep access logs. Hosting-specific privacy information must be supplied by the website operator.</p></details><p>No map requests are sent until you open the map. You can leave this page without loading it.</p><p>Map access is subject to the <a href="https://www.vlaanderen.be/digitaal-vlaanderen/onze-diensten-en-platformen/geografische-webdiensten/gebruiksrecht-en-privacyverklaring-geografische-webdiensten" target="_blank" rel="noopener">Digitaal Vlaanderen service conditions</a>, <a href="https://geoportail.wallonie.be/files/documents/ConditionsSPW/LicServicesSPW.pdf" target="_blank" rel="noopener">SPW service conditions</a> and, when selected, the <a href="https://github.com/osmbe/openstreetmap-carto-be/wiki/Tile-Usage-Policy" target="_blank" rel="noopener">OSM Belgium tile policy</a>.</p><button id="startMap" type="button">Open map</button><noscript><p>Enable JavaScript to use this viewer.</p></noscript></div></section>
+<div id="map" inert>
+</div>
+<div id="divider" class="divider">
+<div class="knob">◀ ▶</div>
+</div>
+<aside class="panel" id="panel" inert>
+<div class="heading">
+<div>🗺️</div>
+<div>
+<strong>Belgian LiDAR Map</strong>
+<small>Wallonia · Flanders · Public terrain data</small>
+</div>
+<button id="menu" aria-label="Toggle menu">☰</button>
+</div>
+<div class="content">
+<h3>Go to location</h3>
+<div class="row">
+<input id="search" class="field" type="text" placeholder="Place, address or coordinates" aria-label="Place, address or coordinates">
+<button id="go">Search</button>
+</div>
+<div class="choices" style="margin-top:8px">
+<button id="ardennes">Ardennes</button>
+
+<button id="belgium">Belgium</button>
+</div>
+<p class="muted">Search in Belgium. Search data: <a href="https://www.openstreetmap.org/copyright">© OpenStreetMap contributors</a> · <a href="https://github.com/komoot/photon">Photon / komoot</a>. <a href="https://www.komoot.com/privacy">Search provider privacy</a>.</p>
+<h3>Terrain layer</h3>
+<select class="field" id="terrain">
+<option value="auto">Automatic (Wallonia / Flanders)</option>
+<option value="wa">Wallonia · 2021–22 hillshade 0.5 m</option>
+<option value="fl">Flanders · hillshade 0.25 m</option>
+<option value="svf">Flanders · sky-view factor 0.25 m</option>
+<option value="off" selected>No LiDAR</option>
+</select>
+<h3>Compare</h3>
+<label class="choice">
+<input type="checkbox" id="compare" checked>
+<span>Enable vertical comparison</span>
+</label>
+<p class="muted">Left: background photograph or street map. Right: LiDAR. Drag the white handle to compare.</p>
+<h3>Background</h3>
+<select class="field" id="background">
+<option value="satellite">Official Belgian aerial photography</option>
+<option value="osm" selected>OpenStreetMap Belgium</option>
+<option value="none">No background</option>
+</select>
+<h3>LiDAR opacity · <span id="opacityValue">100%</span>
+</h3>
+<input id="opacity" type="range" min="0" max="100" value="100">
+<h3>Service status</h3>
+<div id="status" class="status">LiDAR disabled. Choose a terrain layer.</div>
+<div id="backgroundStatus" class="status" role="status"></div>
+<p class="muted" id="selected">Tap map for coordinates.</p>
+<div class="footer">Online connection required. Zooming past native detail does not add resolution.
+<details class="sources"><summary>Sources, licences &amp; privacy</summary>
+<p>Independent viewer; no official affiliation or endorsement. Data remain subject to their owners' licences and service conditions. Online access is provided without availability or accuracy guarantees.</p>
+<ul>
+<li>Flanders terrain: <a href="https://www.vlaanderen.be/datavindplaats/catalogus/digitaal-hoogtemodel-ii-multidirectionale-hillshade-25-cm">DHM II hillshade</a> and <a href="https://www.vlaanderen.be/datavindplaats/catalogus/digitaal-hoogtemodel-vlaanderen-ii-skyview-factor-25-cm">SVF</a>. Bron: Digitaal Vlaanderen. Public geographic service use is subject to the linked dataset and service conditions.</li>
+<li>Flanders/Brussels aerial imagery: <a href="https://www.vlaanderen.be/datavindplaats/catalogus/wmts-orthofotomozaiek-middenschalig-winteropnamen-kleur-meest-recent-vlaanderen">most recent winter orthophoto mosaic</a>. Bron: Luchtopnamen Digitaal Vlaanderen. See dataset metadata for dates and reuse conditions.</li>
+<li>Wallonia terrain: Service public de Wallonie (SPW), <a href="https://geoportail.wallonie.be/catalogue/89b00953-efdb-449b-baec-1c8e7ce483b5.html">MNT 2021–2022 hillshade</a>, © SPW 2021–2022, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>.</li>
+<li>Wallonia aerial imagery: Service public de Wallonie (SPW), <a href="https://geoportail.wallonie.be/catalogue/ad55c2ce-62ad-4c3c-b3cf-8fbc270a6b6e.html">Orthophotos 2023 Été</a>, © SPW 2023, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>. This full-coverage 2023 layer is not a claim to the latest imagery everywhere.</li>
+<li>SPW services: <a href="https://geoportail.wallonie.be/files/documents/ConditionsSPW/LicServicesSPW.pdf">service terms</a>. Normal interactive viewing only; no bulk downloads or prefetching.</li>
+<li>Street map: © <a href="https://www.openstreetmap.org/copyright">OpenStreetMap contributors</a> (ODbL data), tiles generated by <a href="https://www.champs-libres.coop/">Champs-Libres</a>, under the <a href="https://github.com/osmbe/openstreetmap-carto-be/wiki/Tile-Usage-Policy">Belgian tile-service policy</a>.</li>
+</ul>
+<p>Display changes: services reproject imagery for this map; the viewer clips, scales and changes opacity to compare layers. It does not edit the underlying source datasets. Higher zoom does not add native detail. Keep credits visible in shared screenshots.</p>
+<h3>Privacy</h3>
+<p>This viewer requests maps directly from the providers you choose. They receive your IP address, browser/request information and tile coordinates, which reveal the area being viewed. Place and address searches are sent to Photon / komoot only when you press Search or Enter. This service receives your search text, IP address and browser/request information. Coordinate input is processed locally. The application adds no analytics, cookies or browser storage; the current map position is kept in the URL fragment and can be included when you share the link.</p>
+<p><strong>Digitaal Vlaanderen:</strong> the agency processes request logs and IP addresses to secure its geographic services as a task in the public interest. IP addresses are retained for at most 90 days and are accessible to service administrators. You may request access, correction, erasure, restriction or object to processing; objecting may prevent service access. Contact <a href="mailto:privacy@digitaal.vlaanderen.be">privacy@digitaal.vlaanderen.be</a>. See its <a href="https://www.vlaanderen.be/digitaal-vlaanderen/onze-diensten-en-platformen/geografische-webdiensten/gebruiksrecht-en-privacyverklaring-geografische-webdiensten" target="_blank" rel="noopener">full service privacy notice, controller details and complaint information</a>.</p>
+<p><strong>SPW:</strong> consult the <a href="https://geoportail.wallonie.be/vie-privee.html" target="_blank" rel="noopener">SPW privacy notice</a>; privacy contact: <a href="mailto:dpo@spw.wallonie.be">dpo@spw.wallonie.be</a>.</p>
+<p><strong>OpenStreetMap Belgium / Champs-Libres:</strong> street-map requests go to their tile server. See the <a href="https://github.com/osmbe/openstreetmap-carto-be/wiki/Tile-Usage-Policy" target="_blank" rel="noopener">service and attribution policy</a> and <a href="https://www.champs-libres.coop/" target="_blank" rel="noopener">tile provider</a>.</p>
+<p>When this viewer is hosted online, the website host also receives ordinary page requests and may keep access logs. Hosting-specific privacy information must be supplied by the website operator.</p>
+<details><summary>Leaflet 1.9.4 · BSD-2-Clause licence</summary><pre class="licence">BSD 2-Clause License
+
+Copyright (c) 2010-2023, Volodymyr Agafonkin
+Copyright (c) 2010-2011, CloudMade
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
+
+1. Redistributions of source code must retain the above copyright notice, this
+   list of conditions and the following disclaimer.
+
+2. Redistributions in binary form must reproduce the above copyright notice,
+   this list of conditions and the following disclaimer in the documentation
+   and/or other materials provided with the distribution.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+</pre></details>
+<p>The original viewer code is MIT licensed. This does not license the map datasets, provider services or third-party software under MIT.</p>
+</details>
+</div>
+</div>
+</aside>
+<div class="coords" id="coords">
+</div>
+<script src="vendor/leaflet/leaflet.js"></script>
+<script src="js/map.js"></script>
+<script src="js/layers.js"></script>
+<script src="js/comparison.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
