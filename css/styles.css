@@ -4,3 +4,7 @@
 .leaflet-tile-container img{pointer-events:none}.divider:focus-visible .knob{outline:3px solid #75d3c2;outline-offset:3px}
 
 .privacy-gate{position:fixed;inset:0;z-index:5000;overflow:auto;background:#101b22;display:grid;place-items:start center;padding:24px}.privacy-gate[hidden]{display:none}.privacy-card{width:min(650px,100%);margin:auto;background:#142530;border:1px solid #465865;border-radius:16px;padding:24px;line-height:1.6}.privacy-card h1{font-size:24px;margin-top:0}.privacy-card button{margin-top:12px;background:#285c50}summary{cursor:pointer;padding:10px 0;font-weight:600}details p,details li{line-height:1.6}.sources ul{padding-left:18px}.licence{white-space:pre-wrap;overflow-wrap:anywhere;font-size:11px}.leaflet-control-attribution{font-size:11px!important;max-width:calc(100vw - 20px);line-height:1.5!important}.leaflet-container a{color:#07516b}.leaflet-control-attribution a{color:#07516b}
+
+.divider.horizontal{right:0;bottom:auto;width:auto;height:42px;transform:translateY(-50%);cursor:ns-resize}
+.divider.horizontal:before{top:20px;bottom:auto;left:0;right:0;width:auto;height:3px}
+.divider.horizontal .knob{top:50%;left:55%}

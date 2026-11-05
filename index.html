@@ -52,7 +52,11 @@
 <input type="checkbox" id="compare" checked>
 <span>Enable vertical comparison</span>
 </label>
-<p class="muted">Left: background photograph or street map. Right: LiDAR. Drag the white handle to compare.</p>
+<label class="choice">
+<input type="checkbox" id="compareHorizontal">
+<span>Enable horizontal comparison</span>
+</label>
+<p class="muted">Vertical: background on the left, LiDAR on the right. Horizontal: background above, LiDAR below. Drag the white handle to compare. Only one comparison mode can be enabled.</p>
 <h3>Background</h3>
 <select class="field" id="background">
 <option value="satellite">Official Belgian aerial photography</option>
