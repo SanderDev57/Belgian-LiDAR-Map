@@ -37,7 +37,7 @@ Visitors see privacy information before requests start, including security loggi
 - Privacy information: https://geoportail.wallonie.be/vie-privee.html
 
 Source titles, provider credits, metadata links and licence links are displayed in the app. Services reproject images; the viewer clips/scales them and changes display opacity. No edits are made to the original datasets.
-No endorsement is implied. SPW prohibits disproportionate service calls. This app uses ordinary interactive requests, browser caching; it has no bulk-download or prefetch feature.
+No endorsement is implied. SPW prohibits disproportionate service calls. This app uses ordinary interactive requests, browser caching and at most one delayed retry per failed tile; it has no bulk-download or prefetch feature.
 The presence of ArcGIS software in an SPW endpoint does not make the map an Esri-owned World Imagery basemap: the SPW dataset/service conditions apply.
 
 ## OpenStreetMap Belgium / Champs-Libres

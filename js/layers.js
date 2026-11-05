@@ -39,6 +39,22 @@ const terrain = {
  fl:fl('DHMV_II_HILL_25cm'),
  svf:fl('DHMV_II_SVF_25cm')
 };
+// Retry only the failed image once; keep Leaflet's normal tile lifecycle.
+for(const layer of [aerialFl,aerialWa,bases.osm,...Object.values(terrain)]) {
+ const createTile = layer.createTile;
+ layer.createTile = function(coords, done) {
+  let retried = false;
+  return createTile.call(this,coords,(error,tile) => {
+   if(error && !retried) {
+    retried = true;
+    tile.retryTimer = setTimeout(() => {
+     if(this._map && tile.isConnected) tile.src = this.getTileUrl(coords);
+    },1500);
+   } else done(error,tile);
+  });
+ };
+ layer.on('tileunload tileabort',e => clearTimeout(e.tile.retryTimer));
+}
 let active = null, key = '';
 const failures = new Set();
 function isActive(name) {return key === name || (key === 'auto' && (name === 'wa' || name === 'fl'));}
