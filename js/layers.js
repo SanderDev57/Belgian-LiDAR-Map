@@ -140,11 +140,21 @@ let baseKey = '', terrainEnabled = false;
 const terrainFailures = new Map(), backgroundFailures = new Map();
 const failedCount=(collection,group)=>group.getLayers().reduce((sum,l)=>sum+(collection.get(l)?.size||0),0);
 function retryVisibility() {$('retryTiles').hidden=!failedCount(terrainFailures,terrainGroup) && !failedCount(backgroundFailures,baseGroup);}
-function trackFailures(layer,collection,onChange) {
+let statusFrame = 0;
+function scheduleStatuses() {
+ if(statusFrame) return;
+ // Tile events update failure sets immediately, but scan composite layers once
+ // per frame rather than once for every completed or discarded tile.
+ statusFrame = requestAnimationFrame(() => {
+  statusFrame = 0;
+  terrainStatus(); backgroundStatus(); retryVisibility();
+ });
+}
+function trackFailures(layer,collection) {
  const failures=new Set();collection.set(layer,failures);
- layer.on('tileerror',e=>{failures.add(e.tile);onChange();retryVisibility();});
- layer.on('tileload tileunload tileabort',e=>{failures.delete(e.tile);onChange();retryVisibility();});
- layer.on('loading load',onChange);
+ layer.on('tileerror',e=>{failures.add(e.tile);scheduleStatuses();});
+ layer.on('tileload tileunload tileabort',e=>{failures.delete(e.tile);scheduleStatuses();});
+ layer.on('loading load',scheduleStatuses);
 }
 
 function visible(layer) {
@@ -169,11 +179,11 @@ function terrainStatus() {
 }
 function backgroundStatus() {
  const layers = baseGroup.getLayers();
- if(failedCount(backgroundFailures,baseGroup)>0) {
-  $('backgroundStatus').textContent = 'Some background sources failed; available imagery remains visible.';
- } else if(layers.some(layer => layer.isLoading())) {
-  $('backgroundStatus').textContent = 'Loading background…';
- } else $('backgroundStatus').textContent = layers.length || baseKey === 'none' ? '' : 'No street map coverage here.';
+ const message = failedCount(backgroundFailures,baseGroup)>0
+  ? 'Some background sources failed; available imagery remains visible.'
+  : layers.some(layer => layer.isLoading()) ? 'Loading background…'
+  : layers.length || baseKey === 'none' ? '' : 'No street map coverage here.';
+ if($('backgroundStatus').textContent !== message) $('backgroundStatus').textContent = message;
 }
 function refreshCoverage() {
  syncGroup(baseGroup,backgroundSources[baseKey] || []);
@@ -198,8 +208,8 @@ app.chooseTerrain = () => {
 app.getTerrains = () => terrainGroup.getLayers();
 // Set opacity once on the composite, avoiding darker overlaps from stacked translucent layers.
 app.setOpacity = value => {map.getPane('terrainPane').style.opacity = String(value/100);};
-for(const layer of terrainSources) trackFailures(layer,terrainFailures,()=>{if(terrainGroup.hasLayer(layer))terrainStatus();});
-for(const layer of allBackgrounds) trackFailures(layer,backgroundFailures,()=>{if(baseGroup.hasLayer(layer))backgroundStatus();});
+for(const layer of terrainSources) trackFailures(layer,terrainFailures);
+for(const layer of allBackgrounds) trackFailures(layer,backgroundFailures);
 app.retryFailedTiles=()=>{
  for(const [collection,group] of [[terrainFailures,terrainGroup],[backgroundFailures,baseGroup]]) {
   for(const layer of group.getLayers()) for(const tile of [...(collection.get(layer)||[])]) {

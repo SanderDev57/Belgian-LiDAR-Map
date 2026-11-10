@@ -5,7 +5,8 @@ let started = false, layoutFrame = 0, mapAllowed = false;
 function saveView() {
  if(!started) return;
  const c = map.getCenter(), z = map.getZoom();
- $('coords').textContent = c.lat.toFixed(5)+', '+c.lng.toFixed(5)+' · zoom '+z;
+ const coordinates = c.lat.toFixed(5)+', '+c.lng.toFixed(5)+' · zoom '+z;
+ if($('coords').textContent !== coordinates) $('coords').textContent = coordinates;
  const hash = '#'+c.lat.toFixed(5)+','+c.lng.toFixed(5)+','+z;
  try {if(location.hash !== hash) history.replaceState(null,'',location.pathname+location.search+hash);} catch {}
 }
@@ -31,7 +32,8 @@ window.addEventListener('pageshow',scheduleLayout);
 window.addEventListener('load',scheduleLayout);
 if(window.visualViewport) window.visualViewport.addEventListener('resize',scheduleLayout);
 if(window.ResizeObserver) new ResizeObserver(scheduleLayout).observe(map.getContainer());
-map.on('moveend zoomend',saveView);
+// Leaflet also emits moveend after a completed zoom.
+map.on('moveend',saveView);
 $('menu').onclick = () => $('panel').classList.toggle('closed');
 $('terrain').onchange = app.chooseTerrain;
 $('background').onchange = app.setBase;

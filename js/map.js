@@ -14,9 +14,17 @@ map.getPane('terrainPane').style.zIndex = '250';
 map.getPane('terrainPane').style.pointerEvents = 'none';
 L.control.zoom({position:'bottomright'}).addTo(map);
 L.control.scale({imperial:false}).addTo(map);
+const status = $('status');
+let statusFrame = 0, statusMessage = '', statusGood = false;
 function report(message, good=false) {
-  $('status').textContent = message;
-  $('status').classList.toggle('good', good);
+  statusMessage = message; statusGood = good;
+  if(statusFrame) return;
+  // Tile batches can complete together; write only the latest status per frame.
+  statusFrame = requestAnimationFrame(() => {
+    statusFrame = 0;
+    if(status.textContent !== statusMessage) status.textContent = statusMessage;
+    status.classList.toggle('good', statusGood);
+  });
 }
 return {$, map, start, report};
 })();

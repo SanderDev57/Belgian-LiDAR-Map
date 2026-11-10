@@ -1,29 +1,38 @@
 (() => {
 'use strict';
 const app = window.BelgianLidar, {map, $} = app;
-let split = 50, frame = 0, dragging = false;
+let split = 50, frame = 0, dragging = false, dragBounds = null;
 const divider = $('divider');
 const vertical = $('compare'), horizontal = $('compareHorizontal');
 const isHorizontal = () => horizontal.checked;
+const knob = divider.querySelector('.knob');
+function setStyle(element, property, value) {
+ if(element.style[property] !== value) element.style[property] = value;
+}
 app.applySplit = () => {
  const across = isHorizontal();
- const enabled = (vertical.checked || across) && app.getTerrains().length > 0;
+ const layers = app.getTerrains();
+ const enabled = (vertical.checked || across) && layers.length > 0;
  divider.classList.toggle('horizontal',across);
- divider.setAttribute('aria-orientation',across ? 'vertical' : 'horizontal');
- divider.querySelector('.knob').textContent = across ? '\u2191 \u2193' : '\u2190 \u2192';
- divider.style.display = enabled ? 'block' : 'none';
- divider.style.left = across ? '0' : split+'%';
- divider.style.top = across ? split+'%' : '0';
+ const orientation = across ? 'vertical' : 'horizontal';
+ if(divider.getAttribute('aria-orientation') !== orientation) divider.setAttribute('aria-orientation',orientation);
+ const label = across ? '\u2191 \u2193' : '\u2190 \u2192';
+ if(knob.textContent !== label) knob.textContent = label;
+ setStyle(divider,'display',enabled ? 'block' : 'none');
+ setStyle(divider,'left',across ? '0px' : split+'%');
+ setStyle(divider,'top',across ? split+'%' : '0px');
  // No layer coordinates exist before the privacy gate initializes the view.
  if(!map._loaded) return;
- const size = map.getSize();
- const topLeft = map.containerPointToLayerPoint(across ? [0,size.y*split/100] : [size.x*split/100,0]);
- const bottomRight = map.containerPointToLayerPoint([size.x,size.y]);
- for(const layer of app.getTerrains()) {
+ let clip = 'auto';
+ if(enabled) {
+  const size = map.getSize();
+  const topLeft = map.containerPointToLayerPoint(across ? [0,size.y*split/100] : [size.x*split/100,0]);
+  const bottomRight = map.containerPointToLayerPoint([size.x,size.y]);
+  clip = 'rect('+topLeft.y+'px, '+bottomRight.x+'px, '+bottomRight.y+'px, '+topLeft.x+'px)';
+ }
+ for(const layer of layers) {
   const container = layer.getContainer();
-  if(container) container.style.clip = enabled
-   ? 'rect('+topLeft.y+'px, '+bottomRight.x+'px, '+bottomRight.y+'px, '+topLeft.x+'px)'
-   : 'auto';
+  if(container) setStyle(container,'clip',clip);
  }
 };
 function schedule() {
@@ -42,24 +51,28 @@ function setSplit(value) {
  schedule();
 }
 divider.addEventListener('pointerdown',e => {
+ dragBounds = map.getContainer().getBoundingClientRect();
  dragging = true; divider.setPointerCapture(e.pointerId); e.preventDefault();
 });
 divider.addEventListener('pointermove',e => {
  if(!dragging) return;
- const bounds = map.getContainer().getBoundingClientRect();
- setSplit(isHorizontal() ? (e.clientY-bounds.top)/bounds.height*100 : (e.clientX-bounds.left)/bounds.width*100);
+ const bounds = dragBounds || (dragBounds = map.getContainer().getBoundingClientRect());
+ if(bounds.width && bounds.height) setSplit(isHorizontal() ? (e.clientY-bounds.top)/bounds.height*100 : (e.clientX-bounds.left)/bounds.width*100);
 });
-for(const event of ['pointerup','pointercancel','lostpointercapture']) divider.addEventListener(event,() => {dragging = false;});
+for(const event of ['pointerup','pointercancel','lostpointercapture']) divider.addEventListener(event,() => {dragging = false; dragBounds = null;});
 divider.addEventListener('keydown',e => {
  const decrease = isHorizontal() ? 'ArrowUp' : 'ArrowLeft';
  const increase = isHorizontal() ? 'ArrowDown' : 'ArrowRight';
  if(e.key === decrease || e.key === increase) {e.preventDefault(); setSplit(split+(e.key === decrease?-5:5));}
 });
-map.on('move zoom viewreset resize layeradd',app.applySplit);
+// Coalesce movement events; preserve synchronous first display and final clipping.
+map.on('move zoom',schedule);
+map.on('moveend zoomend viewreset resize layeradd',app.applySplit);
+map.on('resize',() => {dragBounds = null;});
 for(const [control,other] of [[vertical,horizontal],[horizontal,vertical]]) {
  control.addEventListener('change',() => {
   if(control.checked) other.checked = false;
-  dragging = false;
+  dragging = false; dragBounds = null;
   setSplit(50);
   app.applySplit();
  });
