@@ -29,7 +29,7 @@ function luTile(name,matrix,maxNativeZoom,zIndex,format='png') {
 }
 const ahnCredit = 'Bron: <a href="https://www.ahn.nl/dataroom">AHN</a> · <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0 (AHN5/6)</a>; AHN4 CC0 · hillshade via Ellipsis Drive';
 const nlPhotoCredit = '© <a href="https://www.beeldmateriaal.nl">Samenwerkingsverband Beeldmateriaal</a> / PDOK · <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>';
-const frCredit = '© <a href="https://cartes.gouv.fr">IGN / Géoplateforme</a> · <a href="https://www.etalab.gouv.fr/licence-ouverte-open-licence/">Licence Ouverte 2.0</a> · source dates vary';
+const frCredit = '© <a href="https://cartes.gouv.fr">IGN / Géoplateforme</a> · <a href="https://www.data.gouv.fr/pages/legal/licences/etalab-2-0">Licence Ouverte 2.0</a> · source dates vary';
 function ignTile(layer,matrix,maxNativeZoom,zIndex,pane='terrainPane',format='image/png',style='normal',minZoom=0) {
  return L.tileLayer('https://data.geopf.fr/wmts?SERVICE=WMTS&VERSION=1.0.0&REQUEST=GetTile&LAYER='+layer+'&STYLE='+style+'&FORMAT='+encodeURIComponent(format)+'&TILEMATRIXSET='+matrix+'&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}',{
   ...common,pane,bounds:frBounds,noWrap:true,maxNativeZoom,minZoom,zIndex,attribution:frCredit,coverageCountry:'FR',allowMissing:layer.includes('LIDAR-HD_MNT')
@@ -93,7 +93,7 @@ const terrainSources = [
 ];
 const satelliteOverview = L.tileLayer('https://tiles.maps.eox.at/wmts/1.0.0/s2cloudless_3857/default/GoogleMapsCompatible/{z}/{y}/{x}.jpg',{
  ...common,pane:'backgroundPane',zIndex:0,bounds:combinedBounds,maxNativeZoom:14,noWrap:true,
- attribution:'<a href="https://cloudless.eox.at">EOxCloudless</a> by <a href="https://eox.at">EOX IT Services GmbH</a> (Contains modified Copernicus Sentinel data 2016 &amp; 2017) · <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>'
+ attribution:'<a href="https://cloudless.eox.at">EOxCloudless</a> by <a href="https://eox.at">EOX IT Services GmbH</a> (Contains modified Copernicus Sentinel data 2016 &amp; 2017) · <a href="https://maps.eox.at/">EOX::Maps</a> · <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>'
 });
 const aerialRlp = wms('https://geo4.service24.rlp.de/wms/rp_dop20.fcgi','rp_dop20',rlpCredit,rlpBounds,19,'backgroundPane',10,'RLP');
 const aerialNrw = wms('https://www.wms.nrw.de/geobasis/wms_nw_dop','nw_dop_rgb',nrwCredit,nrwBounds,20,'backgroundPane',40,'NRW');
