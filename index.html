@@ -41,7 +41,7 @@
 <button id="eifel">Eifel · 25 cm</button>
 <button id="germany">Germany</button>
 </div>
-<p class="muted">Search in Belgium. Search data: <a href="https://www.openstreetmap.org/copyright">© OpenStreetMap contributors</a> · <a href="https://github.com/komoot/photon">Photon / komoot</a>. <a href="https://www.komoot.com/privacy">Search provider privacy</a>.</p>
+<p class="muted">Search area: <strong id="searchArea">Belgium</strong>. Search data: <a href="https://www.openstreetmap.org/copyright">© OpenStreetMap contributors</a> · <a href="https://github.com/komoot/photon">Photon / komoot</a>. <a href="https://www.komoot.com/privacy">Search provider privacy</a>.</p>
 <h3>Terrain layer</h3>
 <select class="field" id="terrain">
 <option value="auto">Automatic (Wallonia / Flanders)</option>
@@ -59,7 +59,7 @@
 </optgroup>
 <option value="off" selected>No LiDAR</option>
 </select>
-<p class="muted" id="terrainHint">Automatic selection covers Belgium only. Select German layers manually; regional coverage ends at state borders.</p>
+<p class="muted" id="terrainHint">Automatic selection covers Belgium only. Select German layers manually; selecting one opens its coverage and selects a German map background.</p>
 <h3>Compare</h3>
 <label class="choice">
 <input type="checkbox" id="compare" checked>

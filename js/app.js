@@ -43,7 +43,8 @@ $('ardennes').onclick = () => map.setView([50.21908,5.61689],17);
 function visitGermany(terrain, center, zoom) {
  $('terrain').value = terrain;
  $('background').value = 'germany';
- app.setBase(); app.chooseTerrain(); map.setView(center,zoom);
+ // Navigate before adding the new services to avoid a discarded request batch.
+ map.setView(center,zoom,{animate:false}); app.setBase(); app.chooseTerrain();
 }
 $('eifel').onclick = () => visitGermany('nrw',[50.581,6.397],15);
 $('germany').onclick = () => visitGermany('de',[51.16,10.45],6);
@@ -65,12 +66,13 @@ async function go() {
  const controller = new AbortController();
  const timeout = setTimeout(() => controller.abort(),12000);
  try {
-  const query = new URLSearchParams({q:value,limit:'1',bbox:'2.5,49.45,6.5,51.6'});
+  const germany = app.getSearchRegion() === 'de';
+  const query = new URLSearchParams({q:value,limit:'1',bbox:germany ? '5.86,47.27,15.05,55.06' : '2.5,49.45,6.5,51.6'});
   const response = await fetch('https://photon.komoot.io/api/?'+query,{signal:controller.signal,credentials:'omit'});
   if(!response.ok) throw new Error('Search request failed');
   const data = await response.json(), result = data.features?.[0];
   const coords = result?.geometry?.coordinates;
-  if(!coords || coords.length < 2 || !coords.every(Number.isFinite)) {report('No location found in Belgium. Try a more complete address.'); return;}
+  if(!coords || coords.length < 2 || !coords.every(Number.isFinite)) {report('No location found in the selected search area. Try a more complete address.'); return;}
   map.setView([coords[1],coords[0]],17);
   const p = result.properties || {};
   $('selected').textContent = 'Found: '+[p.name,p.street,p.housenumber,p.postcode,p.city].filter(Boolean).join(', ');
