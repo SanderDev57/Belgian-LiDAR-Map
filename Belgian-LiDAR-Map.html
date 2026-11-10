@@ -707,8 +707,9 @@ svg.leaflet-image-layer.leaflet-interactive path {
 </style>
 </head>
 <body>
-<section id="privacyGate" class="privacy-gate" aria-labelledby="privacyTitle"><div class="privacy-card"><h1 id="privacyTitle">Belgian LiDAR Map</h1><p>Explore official Belgian terrain and aerial imagery.</p><p>Opening the map connects your browser to OpenStreetMap Belgium / Champs-Libres. Selecting aerial imagery or terrain also connects to Digitaal Vlaanderen and SPW. These providers receive your IP address and the area you view. Place and address searches connect to Photon / komoot when submitted.</p><details><summary>Provider privacy information</summary><p>This viewer requests maps directly from the providers you choose. They receive your IP address, browser/request information and tile coordinates, which reveal the area being viewed. Place and address searches are sent to Photon / komoot only when you press Search or Enter. This service receives your search text, IP address and browser/request information. Coordinate input is processed locally. The application adds no analytics, cookies or browser storage; the current map position is kept in the URL fragment and can be included when you share the link.</p>
+<section id="privacyGate" class="privacy-gate" aria-labelledby="privacyTitle"><div class="privacy-card"><h1 id="privacyTitle">Belgian LiDAR Map</h1><p>Explore official Belgian and German terrain, with Belgian aerial imagery and a German colour map.</p><p>Opening the map connects your browser to OpenStreetMap Belgium / Champs-Libres. Selecting German layers connects to BKG, Geobasis NRW or LVermGeo Rheinland-Pfalz. Selecting Belgian aerial imagery or terrain also connects to Digitaal Vlaanderen and SPW. These providers receive your IP address and the area you view. Place and address searches connect to Photon / komoot when submitted.</p><details><summary>Provider privacy information</summary><p>This viewer requests maps directly from the providers you choose. They receive your IP address, browser/request information and tile coordinates, which reveal the area being viewed. Place and address searches are sent to Photon / komoot only when you press Search or Enter. This service receives your search text, IP address and browser/request information. Coordinate input is processed locally. The application adds no analytics, cookies or browser storage; the current map position is kept in the URL fragment and can be included when you share the link.</p>
 <p><strong>Digitaal Vlaanderen:</strong> the agency processes request logs and IP addresses to secure its geographic services as a task in the public interest. IP addresses are retained for at most 90 days and are accessible to service administrators. You may request access, correction, erasure, restriction or object to processing; objecting may prevent service access. Contact <a href="mailto:privacy@digitaal.vlaanderen.be">privacy@digitaal.vlaanderen.be</a>. See its <a href="https://www.vlaanderen.be/digitaal-vlaanderen/onze-diensten-en-platformen/geografische-webdiensten/gebruiksrecht-en-privacyverklaring-geografische-webdiensten" target="_blank" rel="noopener">full service privacy notice, controller details and complaint information</a>.</p>
+<p><strong>German services:</strong> selected German layers send map requests directly to BKG, Geobasis NRW or LVermGeo Rheinland-Pfalz. See <a href="https://www.bkg.bund.de/DE/Service/Datenschutz/datenschutz.html">BKG privacy</a>, <a href="https://www.bezreg-koeln.nrw.de/datenschutz">Bezirksregierung Köln privacy</a> and <a href="https://lvermgeo.rlp.de/datenschutz">LVermGeoRP privacy</a>.</p>
 <p><strong>SPW:</strong> consult the <a href="https://geoportail.wallonie.be/vie-privee.html" target="_blank" rel="noopener">SPW privacy notice</a>; privacy contact: <a href="mailto:dpo@spw.wallonie.be">dpo@spw.wallonie.be</a>.</p>
 <p><strong>OpenStreetMap Belgium / Champs-Libres:</strong> street-map requests go to their tile server. See the <a href="https://github.com/osmbe/openstreetmap-carto-be/wiki/Tile-Usage-Policy" target="_blank" rel="noopener">service and attribution policy</a> and <a href="https://www.champs-libres.coop/" target="_blank" rel="noopener">tile provider</a>.</p>
 <p>When this viewer is hosted online, the website host also receives ordinary page requests and may keep access logs. Hosting-specific privacy information must be supplied by the website operator.</p></details><p>No map requests are sent until you open the map. You can leave this page without loading it.</p><p>Map access is subject to the <a href="https://www.vlaanderen.be/digitaal-vlaanderen/onze-diensten-en-platformen/geografische-webdiensten/gebruiksrecht-en-privacyverklaring-geografische-webdiensten" target="_blank" rel="noopener">Digitaal Vlaanderen service conditions</a>, <a href="https://geoportail.wallonie.be/files/documents/ConditionsSPW/LicServicesSPW.pdf" target="_blank" rel="noopener">SPW service conditions</a> and, when selected, the <a href="https://github.com/osmbe/openstreetmap-carto-be/wiki/Tile-Usage-Policy" target="_blank" rel="noopener">OSM Belgium tile policy</a>.</p><button id="startMap" type="button">Open map</button><noscript><p>Enable JavaScript to use this viewer.</p></noscript></div></section>
@@ -722,7 +723,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
 <div>🗺️</div>
 <div>
 <strong>Belgian LiDAR Map</strong>
-<small>Wallonia · Flanders · Public terrain data</small>
+<small>Belgium · Germany · Public terrain data</small>
 </div>
 <button id="menu" aria-label="Toggle menu">☰</button>
 </div>
@@ -736,6 +737,8 @@ svg.leaflet-image-layer.leaflet-interactive path {
 <button id="ardennes">Ardennes</button>
 
 <button id="belgium">Belgium</button>
+<button id="eifel">Eifel · 25 cm</button>
+<button id="germany">Germany</button>
 </div>
 <p class="muted">Search in Belgium. Search data: <a href="https://www.openstreetmap.org/copyright">© OpenStreetMap contributors</a> · <a href="https://github.com/komoot/photon">Photon / komoot</a>. <a href="https://www.komoot.com/privacy">Search provider privacy</a>.</p>
 <h3>Terrain layer</h3>
@@ -744,8 +747,18 @@ svg.leaflet-image-layer.leaflet-interactive path {
 <option value="wa">Wallonia · 2021–22 hillshade 0.5 m</option>
 <option value="fl">Flanders · hillshade 0.25 m</option>
 <option value="svf">Flanders · sky-view factor 0.25 m</option>
+<optgroup label="Germany · detailed regional terrain">
+<option value="nrw">North Rhine-Westphalia · hillshade NW · 0.25 m</option>
+<option value="nrwne">North Rhine-Westphalia · hillshade NE · 0.25 m</option>
+<option value="rlp">Rhineland-Palatinate · hillshade · 1 m</option>
+</optgroup>
+<optgroup label="Germany · nationwide overview">
+<option value="de">Germany · hillshade · DGM5 overview</option>
+<option value="decomb">Germany · combined hillshade · DGM5 overview</option>
+</optgroup>
 <option value="off" selected>No LiDAR</option>
 </select>
+<p class="muted" id="terrainHint">Automatic selection covers Belgium only. Select German layers manually; regional coverage ends at state borders.</p>
 <h3>Compare</h3>
 <label class="choice">
 <input type="checkbox" id="compare" checked>
@@ -760,6 +773,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
 <select class="field" id="background">
 <option value="satellite">Official Belgian aerial photography</option>
 <option value="osm" selected>OpenStreetMap Belgium</option>
+<option value="germany">Germany · basemap.de colour map</option>
 <option value="none">No background</option>
 </select>
 <h3>LiDAR opacity · <span id="opacityValue">100%</span>
@@ -778,12 +792,16 @@ svg.leaflet-image-layer.leaflet-interactive path {
 <li>Wallonia terrain: Service public de Wallonie (SPW), <a href="https://geoportail.wallonie.be/catalogue/89b00953-efdb-449b-baec-1c8e7ce483b5.html">MNT 2021–2022 hillshade</a>, © SPW 2021–2022, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>.</li>
 <li>Wallonia aerial imagery: Service public de Wallonie (SPW), <a href="https://geoportail.wallonie.be/catalogue/ad55c2ce-62ad-4c3c-b3cf-8fbc270a6b6e.html">Orthophotos 2023 Été</a>, © SPW 2023, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>. This full-coverage 2023 layer is not a claim to the latest imagery everywhere.</li>
 <li>SPW services: <a href="https://geoportail.wallonie.be/files/documents/ConditionsSPW/LicServicesSPW.pdf">service terms</a>. Normal interactive viewing only; no bulk downloads or prefetching.</li>
+<li>Germany overview and colour map: © GeoBasis-DE / <a href="https://www.bkg.bund.de">BKG</a> (2026), <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>. <a href="https://basemap.de/produkte-und-dienste/web-raster-schummerung/">Terrain documentation</a> and <a href="https://sgx.geodatenzentrum.de/public/gdz/lizenz/deu/nutzungsbedingungen_basemapde.pdf">terms</a>. Hillshade uses DGM5 with rendered pixels approximately 6.4 m; use regional layers for fine features.</li>
+<li>North Rhine-Westphalia: <a href="https://www.bezreg-koeln.nrw.de/geobasis-nrw/produkte-und-dienste/hoehenmodelle/digitale-gelaendemodelle/gelaendeschummerung">Geobasis NRW · 0.25 m hillshade</a>, NW/NE lighting, <a href="https://www.govdata.de/dl-de/zero-2-0">dl-de/zero-2-0</a>.</li>
+<li>Rhineland-Palatinate: ©GeoBasis-DE / <a href="https://www.lvermgeo.rlp.de">LVermGeoRP</a> 2026, <a href="https://www.govdata.de/dl-de/by-2-0">dl-de/by-2-0</a> [Daten bearbeitet]. <a href="https://www.geoportal.rlp.de/mapbender/php/mod_showMetadata.php?id=49357&amp;layout=tabs&amp;resource=layer">Hillshade 1 m metadata</a>.</li>
 <li>Street map: © <a href="https://www.openstreetmap.org/copyright">OpenStreetMap contributors</a> (ODbL data), tiles generated by <a href="https://www.champs-libres.coop/">Champs-Libres</a>, under the <a href="https://github.com/osmbe/openstreetmap-carto-be/wiki/Tile-Usage-Policy">Belgian tile-service policy</a>.</li>
 </ul>
 <p>Display changes: services reproject imagery for this map; the viewer clips, scales and changes opacity to compare layers. It does not edit the underlying source datasets. Higher zoom does not add native detail. Keep credits visible in shared screenshots.</p>
 <h3>Privacy</h3>
 <p>This viewer requests maps directly from the providers you choose. They receive your IP address, browser/request information and tile coordinates, which reveal the area being viewed. Place and address searches are sent to Photon / komoot only when you press Search or Enter. This service receives your search text, IP address and browser/request information. Coordinate input is processed locally. The application adds no analytics, cookies or browser storage; the current map position is kept in the URL fragment and can be included when you share the link.</p>
 <p><strong>Digitaal Vlaanderen:</strong> the agency processes request logs and IP addresses to secure its geographic services as a task in the public interest. IP addresses are retained for at most 90 days and are accessible to service administrators. You may request access, correction, erasure, restriction or object to processing; objecting may prevent service access. Contact <a href="mailto:privacy@digitaal.vlaanderen.be">privacy@digitaal.vlaanderen.be</a>. See its <a href="https://www.vlaanderen.be/digitaal-vlaanderen/onze-diensten-en-platformen/geografische-webdiensten/gebruiksrecht-en-privacyverklaring-geografische-webdiensten" target="_blank" rel="noopener">full service privacy notice, controller details and complaint information</a>.</p>
+<p><strong>German services:</strong> selected German layers send map requests directly to BKG, Geobasis NRW or LVermGeo Rheinland-Pfalz. See <a href="https://www.bkg.bund.de/DE/Service/Datenschutz/datenschutz.html">BKG privacy</a>, <a href="https://www.bezreg-koeln.nrw.de/datenschutz">Bezirksregierung Köln privacy</a> and <a href="https://lvermgeo.rlp.de/datenschutz">LVermGeoRP privacy</a>.</p>
 <p><strong>SPW:</strong> consult the <a href="https://geoportail.wallonie.be/vie-privee.html" target="_blank" rel="noopener">SPW privacy notice</a>; privacy contact: <a href="mailto:dpo@spw.wallonie.be">dpo@spw.wallonie.be</a>.</p>
 <p><strong>OpenStreetMap Belgium / Champs-Libres:</strong> street-map requests go to their tile server. See the <a href="https://github.com/osmbe/openstreetmap-carto-be/wiki/Tile-Usage-Policy" target="_blank" rel="noopener">service and attribution policy</a> and <a href="https://www.champs-libres.coop/" target="_blank" rel="noopener">tile provider</a>.</p>
 <p>When this viewer is hosted online, the website host also receives ordinary page requests and may keep access logs. Hosting-specific privacy information must be supplied by the website operator.</p>
@@ -852,6 +870,7 @@ function report(message, good=false) {
 }
 return {$, map, start, report};
 })();
+
 </script>
 <script>
 (() => {
@@ -860,6 +879,18 @@ const app = window.BelgianLidar, {map, $, report} = app;
 const common = {maxZoom:22,updateWhenIdle:true,updateWhenZooming:false,keepBuffer:1};
 const flCredit = 'Bron: <a href="https://www.vlaanderen.be/datavindplaats/catalogus/wmts-digitaal-hoogtemodel-vlaanderen">Digitaal Vlaanderen</a>';
 const waCredit = '© <a href="https://geoportail.wallonie.be/catalogue/89b00953-efdb-449b-baec-1c8e7ce483b5.html">SPW · MNT 2021–2022 hillshade</a> · <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>';
+const deCredit = '© GeoBasis-DE / <a href="https://www.bkg.bund.de">BKG</a> (2026) · <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>';
+const nrwCredit = '<a href="https://www.bezreg-koeln.nrw.de/geobasis-nrw">Geobasis NRW</a> · <a href="https://www.govdata.de/dl-de/zero-2-0">dl-de/zero-2-0</a>';
+const rlpCredit = '©GeoBasis-DE / <a href="https://www.lvermgeo.rlp.de">LVermGeoRP</a> 2026 · <a href="https://www.govdata.de/dl-de/by-2-0">dl-de/by-2-0</a> [Daten bearbeitet]';
+const deBounds = [[47.27,5.86],[55.06,15.05]];
+const nrwBounds = [[50.057798,5.593338],[52.799797,9.741582]];
+const rlpBounds = [[48.897996,6.037773],[51.000893,8.617703]];
+// WMS 1.3.0 + EPSG:3857 uses easting,northing (no latitude-axis swap).
+function germanWms(url, layers, attribution, bounds, maxNativeZoom, terrainPane = true) {
+ return L.tileLayer.wms(url,{...common,layers,styles:'',format:'image/png',transparent:true,
+  version:'1.3.0',crs:L.CRS.EPSG3857,bounds,maxNativeZoom,noWrap:true,attribution,
+  pane:terrainPane ? 'terrainPane' : 'backgroundPane'});
+}
 const aerialFl = L.tileLayer('https://geo.api.vlaanderen.be/OMWRGBMRVL/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=omwrgbmrvl&STYLE=&FORMAT=image/png&TILEMATRIXSET=GoogleMapsVL&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}', {
  ...common,pane:'backgroundPane',maxNativeZoom:21,zIndex:2,bounds:[[50.685,2.53],[51.52,5.92]],
  attribution:'Bron: Luchtopnamen <a href="https://www.vlaanderen.be/datavindplaats/catalogus/wmts-orthofotomozaiek-middenschalig-winteropnamen-kleur-meest-recent-vlaanderen">Digitaal Vlaanderen</a>'
@@ -869,11 +900,13 @@ const aerialWa = L.tileLayer.wms('https://geoservices.wallonie.be/arcgis/service
  layers:'0',format:'image/png',transparent:true,version:'1.1.1',attribution:'© <a href="https://geoportail.wallonie.be/catalogue/ad55c2ce-62ad-4c3c-b3cf-8fbc270a6b6e.html">SPW · Orthophotos 2023 Été</a> · <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>'
 });
 const bases = {
+ germany:germanWms('https://sgx.geodatenzentrum.de/wms_basemapde','de_basemapde_web_raster_farbe',deCredit,deBounds,19,false),
+
  satellite:L.layerGroup([aerialWa,aerialFl]),
  osm:L.tileLayer('https://tile.openstreetmap.be/osmbe/{z}/{x}/{y}.png',{...common,pane:'backgroundPane',maxNativeZoom:18,attribution:'© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors · Tiles generated by <a href="https://www.champs-libres.coop/">Champs-Libres</a>'})
 };
 let base = null;
-for(const layer of [aerialFl,aerialWa,bases.osm]) {
+for(const layer of [aerialFl,aerialWa,bases.osm,bases.germany]) {
  layer.on('tileerror',() => {
   if(base && (base === layer || (base.hasLayer && base.hasLayer(layer)))) {
    $('backgroundStatus').textContent = 'Background imagery request failed. Try another background or check your connection.';
@@ -893,10 +926,15 @@ function fl(name) {
 const terrain = {
  wa:L.tileLayer.wms('https://geoservices.wallonie.be/arcgis/services/RELIEF/WALLONIE_MNT_2021_2022_HILLSHADE/MapServer/WMSServer',{...common,layers:'0',format:'image/png',transparent:true,version:'1.1.1',pane:'terrainPane',tileSize:256,maxNativeZoom:21,attribution:waCredit,bounds:[[49.49,2.84],[50.85,6.5]]}),
  fl:fl('DHMV_II_HILL_25cm'),
- svf:fl('DHMV_II_SVF_25cm')
+ svf:fl('DHMV_II_SVF_25cm'),
+ nrw:germanWms('https://www.wms.nrw.de/geobasis/wms_nw_dgm-schummerung','nw_dgm-schummerung_pan',nrwCredit,nrwBounds,19),
+ nrwne:germanWms('https://www.wms.nrw.de/geobasis/wms_nw_dgm-schummerung','nw_dgm-schummerung_pan_ne',nrwCredit,nrwBounds,19),
+ rlp:germanWms('https://geo4.service24.rlp.de/wms/shade1m.fcgi','rp_shade1m',rlpCredit,rlpBounds,17),
+ de:germanWms('https://sgx.geodatenzentrum.de/wms_basemapde_schummerung','de_basemapde_web_raster_hillshade',deCredit,deBounds,14),
+ decomb:germanWms('https://sgx.geodatenzentrum.de/wms_basemapde_schummerung','de_basemapde_web_raster_combshade',deCredit,deBounds,14)
 };
 // Retry only the failed image once; keep Leaflet's normal tile lifecycle.
-for(const layer of [aerialFl,aerialWa,bases.osm,...Object.values(terrain)]) {
+for(const layer of [aerialFl,aerialWa,bases.osm,bases.germany,...Object.values(terrain)]) {
  const createTile = layer.createTile;
  layer.createTile = function(coords, done) {
   let retried = false;
@@ -911,11 +949,21 @@ for(const layer of [aerialFl,aerialWa,bases.osm,...Object.values(terrain)]) {
  };
  layer.on('tileunload tileabort',e => clearTimeout(e.tile.retryTimer));
 }
+const terrainHints = {
+ nrw:'North Rhine-Westphalia only · 0.25 m pixels · light from northwest. Try NE lighting to reveal features in another direction.',
+ nrwne:'North Rhine-Westphalia only · 0.25 m pixels · light from northeast.',
+ rlp:'Rhineland-Palatinate only · 1 m hillshade. Includes the southern Eifel.',
+ de:'Germany overview · DGM5 source, approximately 6.4 m rendered pixels. Choose a regional layer for fine features.',
+ decomb:'Germany overview · combined hillshade, approximately 6.4 m rendered pixels. Choose a regional layer for fine features.'
+};
 let active = null, key = '';
 const failures = new Set();
 function isActive(name) {return key === name || (key === 'auto' && (name === 'wa' || name === 'fl'));}
 function terrainStatus() {
  if(!active || app.getTerrains().some(layer => layer.isLoading())) return;
+ if(map._loaded && app.getTerrains().every(layer => layer.options.bounds && !map.getBounds().intersects(L.latLngBounds(layer.options.bounds)))) {
+  report('Outside this terrain layer’s coverage. Move into the region or choose another layer.'); return;
+ }
  const failed = app.getTerrains().some(layer => failures.has(layer));
  report(failed ? 'Some terrain tiles could not load. Try another layer.' : 'Terrain loaded.',!failed);
 }
@@ -930,6 +978,7 @@ for(const [name,layer] of Object.entries(terrain)) {
 }
 app.chooseTerrain = () => {
  let next = $('terrain').value;
+ $('terrainHint').textContent = terrainHints[next] || 'Automatic selection covers Belgium only. Select German layers manually; regional coverage ends at state borders.';
  if(next === 'off') next = '';
  if(next === key) return;
  if(active) map.removeLayer(active);
@@ -942,9 +991,11 @@ app.chooseTerrain = () => {
  if(app.applySplit) app.applySplit();
  terrainStatus();
 };
+map.on('moveend',terrainStatus);
 app.getTerrains = () => !active ? [] : key === 'auto' ? [terrain.wa,terrain.fl] : [active];
 app.setOpacity = value => app.getTerrains().forEach(layer => layer.setOpacity(value/100));
 })();
+
 </script>
 <script>
 (() => {
@@ -1015,6 +1066,7 @@ for(const [control,other] of [[vertical,horizontal],[horizontal,vertical]]) {
 }
 setSplit(50);
 })();
+
 </script>
 <script>
 (() => {
@@ -1059,6 +1111,13 @@ $('opacity').oninput = () => {
  $('opacityValue').textContent = value+'%'; app.setOpacity(value);
 };
 $('ardennes').onclick = () => map.setView([50.21908,5.61689],17);
+function visitGermany(terrain, center, zoom) {
+ $('terrain').value = terrain;
+ $('background').value = 'germany';
+ app.setBase(); app.chooseTerrain(); map.setView(center,zoom);
+}
+$('eifel').onclick = () => visitGermany('nrw',[50.581,6.397],15);
+$('germany').onclick = () => visitGermany('de',[51.16,10.45],6);
 $('belgium').onclick = () => map.fitBounds([[49.5,2.6],[51.5,6.35]]);
 map.on('click',e => {$('selected').textContent = 'Selected: '+e.latlng.lat.toFixed(6)+', '+e.latlng.lng.toFixed(6);});
 let searching = false;
@@ -1105,6 +1164,7 @@ $('startMap').onclick = () => {
  scheduleLayout();
 };
 })();
+
 </script>
 </body>
 </html>

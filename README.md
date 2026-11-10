@@ -1,6 +1,6 @@
 # Belgian LiDAR Map
 
-An independent, free static viewer comparing official Belgian terrain with aerial photography or an OpenStreetMap street map. No affiliation with or endorsement by the data providers.
+An independent, free static viewer comparing official Belgian and German terrain with aerial photography or an OpenStreetMap street map. No affiliation with or endorsement by the data providers.
 
 ## Run
 Open `index.html` in a modern browser, or serve the folder on a static web host.
@@ -56,3 +56,10 @@ Actual iPhone/Safari testing is required separately from desktop mobile-viewport
 
 ## Contributing
 See [CONTRIBUTING.md](CONTRIBUTING.md).
+
+
+## German layers
+Select a regional layer manually: North Rhine-Westphalia has 0.25 m hillshade with NW or NE lighting; Rhineland-Palatinate has 1 m hillshade. The Eifel shortcut opens NRW detailed terrain. The Germany shortcut opens the nationwide DGM5 overview. Automatic terrain selection remains Belgian only.
+The nationwide hillshade and combined hillshade use DGM5, with approximately 6.4 m rendered pixels, and are deliberately overzoomed from zoom 14. NRW is overzoomed from 19 and RLP from 17; further zoom adds no detail. Bounds suppress requests outside service extents but do not represent exact state boundaries. Blank areas near borders remain possible.
+Germany has its own optional basemap.de colour background. Belgian aerial photography does not cover Germany. German services load only when selected. All layers support the divider and opacity controls.
+Place/address search currently covers Belgium; use coordinates or the German shortcuts for Germany.

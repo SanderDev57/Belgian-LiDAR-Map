@@ -40,6 +40,13 @@ $('opacity').oninput = () => {
  $('opacityValue').textContent = value+'%'; app.setOpacity(value);
 };
 $('ardennes').onclick = () => map.setView([50.21908,5.61689],17);
+function visitGermany(terrain, center, zoom) {
+ $('terrain').value = terrain;
+ $('background').value = 'germany';
+ app.setBase(); app.chooseTerrain(); map.setView(center,zoom);
+}
+$('eifel').onclick = () => visitGermany('nrw',[50.581,6.397],15);
+$('germany').onclick = () => visitGermany('de',[51.16,10.45],6);
 $('belgium').onclick = () => map.fitBounds([[49.5,2.6],[51.5,6.35]]);
 map.on('click',e => {$('selected').textContent = 'Selected: '+e.latlng.lat.toFixed(6)+', '+e.latlng.lng.toFixed(6);});
 let searching = false;

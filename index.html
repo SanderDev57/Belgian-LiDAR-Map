@@ -8,8 +8,9 @@
 <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
-<section id="privacyGate" class="privacy-gate" aria-labelledby="privacyTitle"><div class="privacy-card"><h1 id="privacyTitle">Belgian LiDAR Map</h1><p>Explore official Belgian terrain and aerial imagery.</p><p>Opening the map connects your browser to OpenStreetMap Belgium / Champs-Libres. Selecting aerial imagery or terrain also connects to Digitaal Vlaanderen and SPW. These providers receive your IP address and the area you view. Place and address searches connect to Photon / komoot when submitted.</p><details><summary>Provider privacy information</summary><p>This viewer requests maps directly from the providers you choose. They receive your IP address, browser/request information and tile coordinates, which reveal the area being viewed. Place and address searches are sent to Photon / komoot only when you press Search or Enter. This service receives your search text, IP address and browser/request information. Coordinate input is processed locally. The application adds no analytics, cookies or browser storage; the current map position is kept in the URL fragment and can be included when you share the link.</p>
+<section id="privacyGate" class="privacy-gate" aria-labelledby="privacyTitle"><div class="privacy-card"><h1 id="privacyTitle">Belgian LiDAR Map</h1><p>Explore official Belgian and German terrain, with Belgian aerial imagery and a German colour map.</p><p>Opening the map connects your browser to OpenStreetMap Belgium / Champs-Libres. Selecting German layers connects to BKG, Geobasis NRW or LVermGeo Rheinland-Pfalz. Selecting Belgian aerial imagery or terrain also connects to Digitaal Vlaanderen and SPW. These providers receive your IP address and the area you view. Place and address searches connect to Photon / komoot when submitted.</p><details><summary>Provider privacy information</summary><p>This viewer requests maps directly from the providers you choose. They receive your IP address, browser/request information and tile coordinates, which reveal the area being viewed. Place and address searches are sent to Photon / komoot only when you press Search or Enter. This service receives your search text, IP address and browser/request information. Coordinate input is processed locally. The application adds no analytics, cookies or browser storage; the current map position is kept in the URL fragment and can be included when you share the link.</p>
 <p><strong>Digitaal Vlaanderen:</strong> the agency processes request logs and IP addresses to secure its geographic services as a task in the public interest. IP addresses are retained for at most 90 days and are accessible to service administrators. You may request access, correction, erasure, restriction or object to processing; objecting may prevent service access. Contact <a href="mailto:privacy@digitaal.vlaanderen.be">privacy@digitaal.vlaanderen.be</a>. See its <a href="https://www.vlaanderen.be/digitaal-vlaanderen/onze-diensten-en-platformen/geografische-webdiensten/gebruiksrecht-en-privacyverklaring-geografische-webdiensten" target="_blank" rel="noopener">full service privacy notice, controller details and complaint information</a>.</p>
+<p><strong>German services:</strong> selected German layers send map requests directly to BKG, Geobasis NRW or LVermGeo Rheinland-Pfalz. See <a href="https://www.bkg.bund.de/DE/Service/Datenschutz/datenschutz.html">BKG privacy</a>, <a href="https://www.bezreg-koeln.nrw.de/datenschutz">Bezirksregierung Köln privacy</a> and <a href="https://lvermgeo.rlp.de/datenschutz">LVermGeoRP privacy</a>.</p>
 <p><strong>SPW:</strong> consult the <a href="https://geoportail.wallonie.be/vie-privee.html" target="_blank" rel="noopener">SPW privacy notice</a>; privacy contact: <a href="mailto:dpo@spw.wallonie.be">dpo@spw.wallonie.be</a>.</p>
 <p><strong>OpenStreetMap Belgium / Champs-Libres:</strong> street-map requests go to their tile server. See the <a href="https://github.com/osmbe/openstreetmap-carto-be/wiki/Tile-Usage-Policy" target="_blank" rel="noopener">service and attribution policy</a> and <a href="https://www.champs-libres.coop/" target="_blank" rel="noopener">tile provider</a>.</p>
 <p>When this viewer is hosted online, the website host also receives ordinary page requests and may keep access logs. Hosting-specific privacy information must be supplied by the website operator.</p></details><p>No map requests are sent until you open the map. You can leave this page without loading it.</p><p>Map access is subject to the <a href="https://www.vlaanderen.be/digitaal-vlaanderen/onze-diensten-en-platformen/geografische-webdiensten/gebruiksrecht-en-privacyverklaring-geografische-webdiensten" target="_blank" rel="noopener">Digitaal Vlaanderen service conditions</a>, <a href="https://geoportail.wallonie.be/files/documents/ConditionsSPW/LicServicesSPW.pdf" target="_blank" rel="noopener">SPW service conditions</a> and, when selected, the <a href="https://github.com/osmbe/openstreetmap-carto-be/wiki/Tile-Usage-Policy" target="_blank" rel="noopener">OSM Belgium tile policy</a>.</p><button id="startMap" type="button">Open map</button><noscript><p>Enable JavaScript to use this viewer.</p></noscript></div></section>
@@ -23,7 +24,7 @@
 <div>🗺️</div>
 <div>
 <strong>Belgian LiDAR Map</strong>
-<small>Wallonia · Flanders · Public terrain data</small>
+<small>Belgium · Germany · Public terrain data</small>
 </div>
 <button id="menu" aria-label="Toggle menu">☰</button>
 </div>
@@ -37,6 +38,8 @@
 <button id="ardennes">Ardennes</button>
 
 <button id="belgium">Belgium</button>
+<button id="eifel">Eifel · 25 cm</button>
+<button id="germany">Germany</button>
 </div>
 <p class="muted">Search in Belgium. Search data: <a href="https://www.openstreetmap.org/copyright">© OpenStreetMap contributors</a> · <a href="https://github.com/komoot/photon">Photon / komoot</a>. <a href="https://www.komoot.com/privacy">Search provider privacy</a>.</p>
 <h3>Terrain layer</h3>
@@ -45,8 +48,18 @@
 <option value="wa">Wallonia · 2021–22 hillshade 0.5 m</option>
 <option value="fl">Flanders · hillshade 0.25 m</option>
 <option value="svf">Flanders · sky-view factor 0.25 m</option>
+<optgroup label="Germany · detailed regional terrain">
+<option value="nrw">North Rhine-Westphalia · hillshade NW · 0.25 m</option>
+<option value="nrwne">North Rhine-Westphalia · hillshade NE · 0.25 m</option>
+<option value="rlp">Rhineland-Palatinate · hillshade · 1 m</option>
+</optgroup>
+<optgroup label="Germany · nationwide overview">
+<option value="de">Germany · hillshade · DGM5 overview</option>
+<option value="decomb">Germany · combined hillshade · DGM5 overview</option>
+</optgroup>
 <option value="off" selected>No LiDAR</option>
 </select>
+<p class="muted" id="terrainHint">Automatic selection covers Belgium only. Select German layers manually; regional coverage ends at state borders.</p>
 <h3>Compare</h3>
 <label class="choice">
 <input type="checkbox" id="compare" checked>
@@ -61,6 +74,7 @@
 <select class="field" id="background">
 <option value="satellite">Official Belgian aerial photography</option>
 <option value="osm" selected>OpenStreetMap Belgium</option>
+<option value="germany">Germany · basemap.de colour map</option>
 <option value="none">No background</option>
 </select>
 <h3>LiDAR opacity · <span id="opacityValue">100%</span>
@@ -79,12 +93,16 @@
 <li>Wallonia terrain: Service public de Wallonie (SPW), <a href="https://geoportail.wallonie.be/catalogue/89b00953-efdb-449b-baec-1c8e7ce483b5.html">MNT 2021–2022 hillshade</a>, © SPW 2021–2022, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>.</li>
 <li>Wallonia aerial imagery: Service public de Wallonie (SPW), <a href="https://geoportail.wallonie.be/catalogue/ad55c2ce-62ad-4c3c-b3cf-8fbc270a6b6e.html">Orthophotos 2023 Été</a>, © SPW 2023, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>. This full-coverage 2023 layer is not a claim to the latest imagery everywhere.</li>
 <li>SPW services: <a href="https://geoportail.wallonie.be/files/documents/ConditionsSPW/LicServicesSPW.pdf">service terms</a>. Normal interactive viewing only; no bulk downloads or prefetching.</li>
+<li>Germany overview and colour map: © GeoBasis-DE / <a href="https://www.bkg.bund.de">BKG</a> (2026), <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>. <a href="https://basemap.de/produkte-und-dienste/web-raster-schummerung/">Terrain documentation</a> and <a href="https://sgx.geodatenzentrum.de/public/gdz/lizenz/deu/nutzungsbedingungen_basemapde.pdf">terms</a>. Hillshade uses DGM5 with rendered pixels approximately 6.4 m; use regional layers for fine features.</li>
+<li>North Rhine-Westphalia: <a href="https://www.bezreg-koeln.nrw.de/geobasis-nrw/produkte-und-dienste/hoehenmodelle/digitale-gelaendemodelle/gelaendeschummerung">Geobasis NRW · 0.25 m hillshade</a>, NW/NE lighting, <a href="https://www.govdata.de/dl-de/zero-2-0">dl-de/zero-2-0</a>.</li>
+<li>Rhineland-Palatinate: ©GeoBasis-DE / <a href="https://www.lvermgeo.rlp.de">LVermGeoRP</a> 2026, <a href="https://www.govdata.de/dl-de/by-2-0">dl-de/by-2-0</a> [Daten bearbeitet]. <a href="https://www.geoportal.rlp.de/mapbender/php/mod_showMetadata.php?id=49357&amp;layout=tabs&amp;resource=layer">Hillshade 1 m metadata</a>.</li>
 <li>Street map: © <a href="https://www.openstreetmap.org/copyright">OpenStreetMap contributors</a> (ODbL data), tiles generated by <a href="https://www.champs-libres.coop/">Champs-Libres</a>, under the <a href="https://github.com/osmbe/openstreetmap-carto-be/wiki/Tile-Usage-Policy">Belgian tile-service policy</a>.</li>
 </ul>
 <p>Display changes: services reproject imagery for this map; the viewer clips, scales and changes opacity to compare layers. It does not edit the underlying source datasets. Higher zoom does not add native detail. Keep credits visible in shared screenshots.</p>
 <h3>Privacy</h3>
 <p>This viewer requests maps directly from the providers you choose. They receive your IP address, browser/request information and tile coordinates, which reveal the area being viewed. Place and address searches are sent to Photon / komoot only when you press Search or Enter. This service receives your search text, IP address and browser/request information. Coordinate input is processed locally. The application adds no analytics, cookies or browser storage; the current map position is kept in the URL fragment and can be included when you share the link.</p>
 <p><strong>Digitaal Vlaanderen:</strong> the agency processes request logs and IP addresses to secure its geographic services as a task in the public interest. IP addresses are retained for at most 90 days and are accessible to service administrators. You may request access, correction, erasure, restriction or object to processing; objecting may prevent service access. Contact <a href="mailto:privacy@digitaal.vlaanderen.be">privacy@digitaal.vlaanderen.be</a>. See its <a href="https://www.vlaanderen.be/digitaal-vlaanderen/onze-diensten-en-platformen/geografische-webdiensten/gebruiksrecht-en-privacyverklaring-geografische-webdiensten" target="_blank" rel="noopener">full service privacy notice, controller details and complaint information</a>.</p>
+<p><strong>German services:</strong> selected German layers send map requests directly to BKG, Geobasis NRW or LVermGeo Rheinland-Pfalz. See <a href="https://www.bkg.bund.de/DE/Service/Datenschutz/datenschutz.html">BKG privacy</a>, <a href="https://www.bezreg-koeln.nrw.de/datenschutz">Bezirksregierung Köln privacy</a> and <a href="https://lvermgeo.rlp.de/datenschutz">LVermGeoRP privacy</a>.</p>
 <p><strong>SPW:</strong> consult the <a href="https://geoportail.wallonie.be/vie-privee.html" target="_blank" rel="noopener">SPW privacy notice</a>; privacy contact: <a href="mailto:dpo@spw.wallonie.be">dpo@spw.wallonie.be</a>.</p>
 <p><strong>OpenStreetMap Belgium / Champs-Libres:</strong> street-map requests go to their tile server. See the <a href="https://github.com/osmbe/openstreetmap-carto-be/wiki/Tile-Usage-Policy" target="_blank" rel="noopener">service and attribution policy</a> and <a href="https://www.champs-libres.coop/" target="_blank" rel="noopener">tile provider</a>.</p>
 <p>When this viewer is hosted online, the website host also receives ordinary page requests and may keep access logs. Hosting-specific privacy information must be supplied by the website operator.</p>

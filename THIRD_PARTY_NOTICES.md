@@ -55,3 +55,19 @@ Place and address search uses https://photon.komoot.io/api/ only after Search or
 ## Hosting
 No hosting account, analytics, cookie system or deployment-specific privacy controller details are configured here. Public deployers must provide their own operator/contact/host logging information.
 A public repository does not grant permission to overload providers, remove credits, resell imagery or ignore future service changes.
+
+
+## German terrain and background (reviewed 10 November 2026)
+- Nationwide hillshade and combined hillshade: https://sgx.geodatenzentrum.de/wms_basemapde_schummerung
+- Colour background: https://sgx.geodatenzentrum.de/wms_basemapde
+- © GeoBasis-DE / BKG (2026), CC BY 4.0. BKG: https://www.bkg.bund.de ; licence: https://creativecommons.org/licenses/by/4.0/
+- Product: https://basemap.de/produkte-und-dienste/web-raster-schummerung/
+- Terms: https://sgx.geodatenzentrum.de/public/gdz/lizenz/deu/nutzungsbedingungen_basemapde.pdf
+- NRW 0.25 m hillshade, NW and NE lighting: https://www.wms.nrw.de/geobasis/wms_nw_dgm-schummerung
+- Geobasis NRW, dl-de/zero-2-0: https://www.govdata.de/dl-de/zero-2-0
+- Product: https://www.bezreg-koeln.nrw.de/geobasis-nrw/produkte-und-dienste/hoehenmodelle/digitale-gelaendemodelle/gelaendeschummerung
+- RLP 1 m hillshade: https://geo4.service24.rlp.de/wms/shade1m.fcgi
+- ©GeoBasis-DE / LVermGeoRP 2026, dl-de/by-2-0, https://www.lvermgeo.rlp.de [Daten bearbeitet]. Licence: https://www.govdata.de/dl-de/by-2-0
+- Metadata: https://www.geoportal.rlp.de/mapbender/php/mod_showMetadata.php?id=49357&layout=tabs&resource=layer
+- Source conditions: https://lvermgeo.rlp.de/geodaten-geoshop/open-data
+Changes in display: reprojection, clipping, scaling and opacity only; source datasets are not edited. Providers receive requests and IP/browser details when their layer is selected. No prefetching or bulk downloads. See in-app provider privacy links.
