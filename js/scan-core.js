@@ -20,7 +20,7 @@ function classify(m) {
 }
 async function analyze(grid,{signal,progress=()=>{}}={}) {
  const {width:w,height:h,values:z,cellSize:s}=grid;
- if(!Number.isInteger(w)||!Number.isInteger(h)||w<32||h<32||w*h>450000||z.length!==w*h||!(s>=.5&&s<=2)) throw new Error('Ongeldig of te groot hoogteraster.');
+ if(!Number.isInteger(w)||!Number.isInteger(h)||w<32||h<32||w*h>700000||z.length!==w*h||!(s>=.5&&s<=2)) throw new Error('Ongeldig of te groot hoogteraster.');
  const stride=w+1,total=(w+1)*(h+1),sum=new Float64Array(total),count=new Uint32Array(total);
  let valid=0;
  for(let y=0;y<h;y++) {

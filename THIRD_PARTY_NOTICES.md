@@ -131,7 +131,7 @@ Complete French basemaps, aerial and fallback terrain use ordinary image loading
 from `https://tiles.mapterhorn.com/{z}/{x}/{y}.webp`, at zoom 17. These are elevation
 values, not interpreted hillshade colours. The single-tile endpoint is explicitly
 published at https://mapterhorn.com/data-access/ . The viewer requests only the
-chosen area plus a 16 m analysis margin: maximum 600 × 600 m, 36 tiles, two concurrent
+chosen area plus a 16 m analysis margin (104 m for pretrained models): maximum 600 × 600 m, 36 tiles, two concurrent
 requests, a 20 second request timeout and eight decoded tiles in memory. No bulk
 extraction, background scan, persistent tile store or offline pack is added.
 
@@ -151,6 +151,52 @@ https://download.mapterhorn.com/attribution.json . Checked 2026-11-10, including
   fallback data. Displayed terrain tiles and scan data are separate sources.
 
 The provider receives request/IP details and tile coordinates only when the user
-starts a scan. User feedback is kept in memory in the current page session only;
-it is not transmitted or used to train a model. Candidate output is an unvalidated
+starts a scan. User feedback is retained only in localStorage in the current browser (up to 1,000 reviews);
+it is not transmitted or used to train a model and can be erased. An explicit
+test export can include the raw bounded DEM, scan metadata and review coordinates. Candidate output is an unvalidated
 morphological hypothesis, not evidence of archaeological identity, age or absence.
+
+## Pretrained model lab · Tumulus and ADAF
+
+### Tumulus detector
+
+Source: https://github.com/ObuObuHub/tumulus-lidar-detector , pinned at
+`70ea999bc274db9aab11798737eb68a4c4a31352`.
+Author: Chiper-Leferman Andrei. Numerical helpers (`lib_channels.py`,
+`lib_tumul.py`) are vendored under MIT; fingerprint and pretrained weights retain
+the upstream CC BY 4.0 attribution. The original notice is retained in
+`licenses/Tumulus-MIT-and-CC-BY-4.0.txt`. Vendored numerical helpers are unchanged;
+our surrounding inference adapter is new. Renamed bundled assets:
+
+- `companion/models/tumulus-multichannel.pt` = `multichannel_cnn.pt`;
+  SHA-256 `08df9120a68bada89105229a1c07f8ed5c50fe9108409e8dc23b1574975af376`.
+- `companion/models/tumulus-single.pt` = `combined_cnn.pt`;
+  SHA-256 `f4eecca0def383b3937bf913bc06986886e8d54be828cab9dd261ff649f8e4a5`.
+
+This project adapts the original proposal/channel recipes and reports raw CNN
+scores. It does not reproduce the complete Romanian fusion/filter pipeline or
+claim its reported benchmark results. The single-channel asset is retained for
+reproducibility; the map currently uses the multichannel model.
+
+### ADAF
+
+Original project: https://github.com/EarthObservation/adaf , inspected at
+`a44acdd678773666458ea50f544b5d2292bcef51`.
+Code is Apache-2.0; original notice retained in `licenses/ADAF-Apache-2.0.txt`.
+Official checkpoints: https://zenodo.org/records/15848663 , version 1.0.0.
+The official record's API metadata identifies model weights as CC BY-SA 4.0.
+Authors: Ana Kostovska, Dragi Kocev, Nejc Čož, Žiga Kokalj, Susan Curran and
+Anthony Corns; copyright © 2025 ZRC SAZU and Bias Variance Labs.
+
+ADAF weights are downloaded only by an explicit setup command, with the published
+MD5 verified, and are not committed to this repository. Our CPU adapter follows
+ADAF's object-detection architecture and SLRM preprocessing but omits the full
+AiTLAS/GDAL application. No converted or fine-tuned ADAF checkpoint is distributed.
+Keep original attribution/licensing with any redistribution or adapted model.
+These notices do not change underlying terrain data licences.
+
+The optional companion receives only the explicitly requested DEM over loopback;
+it does not send rasters or reviews to an external AI service. Models were not
+validated for Belgian historical identification or dating. Exported user reviews
+are not independently confirmed training labels. Local/browser exports retain
+source/model provenance and should not be confused with validated ground truth.

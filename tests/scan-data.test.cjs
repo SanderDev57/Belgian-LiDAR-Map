@@ -12,6 +12,7 @@ function harness(){
 test('bounded DEM fetch, Terrarium decoding, coordinate alignment across seams, cache and abort',async()=>{
  const {api,stats}=harness();assert.equal(stats().calls,0);
  assert.throws(()=>api.plan(bounds(50,5,.1)),/te groot/);assert.throws(()=>api.plan(bounds(50,5,.00001)),/minstens/);assert.throws(()=>api.plan(bounds(80,0)),/Kies een gebied/);
+ const aiPlan=api.plan(bounds(),{halo:104});assert.equal(aiPlan.halo,104);assert.ok(aiPlan.width*aiPlan.height<=700000&&aiPlan.tiles.length<=36);
  const p=api.plan(bounds());assert.ok(p.tiles.length<=36);const c=new AbortController();const grid=await api.load(p,{signal:c.signal,progress(){}});
  assert.ok(stats().peak<=2);assert.equal(stats().active,0);assert.equal(grid.values.length,p.width*p.height);
  for(let y=0;y<p.height;y+=13)for(let x=0;x<p.width;x+=11){

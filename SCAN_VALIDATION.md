@@ -1,4 +1,7 @@
-# Scan gebied validation · 2026-11-10
+# Original shape-rule scan validation · 2026-11-10
+
+This records the initial shape-rule implementation. For the subsequent local
+pretrained-model beta, see [MODEL_LAB_VALIDATION.md](MODEL_LAB_VALIDATION.md).
 
 Branch: `feature/scan-gebied`. Based on main commit `f8a4055`.
 

@@ -89,3 +89,13 @@ All map sources now share a visible-tile scheduler: at most eight active request
 France HD and the newer AHN5/6 sources activate from zoom 12; French high-resolution fallback activates from zoom 11. Their broader connected terrain remains beneath them. Automatic selection still puts the finest connected available source on top at detail zooms. All national/regional backgrounds are geographically clipped, so opaque out-of-area pixels cannot hide neighbouring maps at overview zooms. Generalized edges can have narrow gaps and are not survey boundaries.
 
 Complete French basemaps, aerial and fallback terrain use ordinary image loading through the shared scheduler, avoiding a CORS requirement. Only progressively published LiDAR HD uses fetched tiles to distinguish missing coverage (404/204) from service failures.
+
+## Optional local pretrained model analysis
+
+See THIRD_PARTY_NOTICES.md and companion/README.md for the pinned Tumulus assets
+(CC BY 4.0 weights, MIT helper code), explicit ADAF weight downloads (CC BY-SA 4.0)
+and preserved notices. The companion runs on loopback, not an external AI API.
+Model scans request a 104 m context margin within the existing 36-tile/two-request
+cap. Reviews are retained in the user's browser only, may be erased, and are not
+transmitted or used to train a model. User-triggered exports may include the
+bounded DEM and coordinates, with terrain/model attribution retained.

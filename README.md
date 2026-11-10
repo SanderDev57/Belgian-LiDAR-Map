@@ -51,7 +51,7 @@ Before deploying publicly:
 See [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) and the in-app **Sources, licences & privacy** panel.
 Map requests only begin after **Open map**. Leaflet is served locally; no CDN, Esri basemap, CARTO basemap or Nominatim service is requested.
 Providers receive IP/browser/request details and the visible map area. Coordinate input is processed locally; submitted place/address searches go to Photon / komoot, which receives the query and ordinary request information. Navigation results in ordinary map tile requests.
-The app sets no cookies and uses no localStorage, tracking analytics or accounts. Map position is stored in the URL fragment.
+The app sets no cookies and uses no tracking analytics or accounts. Scan reviews use localStorage only in the current browser and can be erased. Map position is stored in the URL fragment.
 The website host may independently process page-access logs.
 
 ## Automatic terrain and imagery
@@ -115,19 +115,19 @@ A failed/cancelled scan retains previous results. Partial/missing data fails the
 whole scan instead of reporting false completeness. There is no automatic retry
 storm. Rerun manually if a service is unavailable.
 
-Analysis samples heights on a 1 m grid with a 16 m context margin, subtracts a
+Analysis samples heights on a 1 m grid with a 16 m context margin (104 m for model/comparison scans), subtracts a
 12 m local terrain mean after small-scale smoothing, thresholds local relief and
 labels connected components using elongation, sign, oriented rectangularity and
 ring-like occupancy. A near-linear hillside is removed by the symmetric local
 mean. Approximate footprint boxes and centres are marked; detections intersecting
 the scan boundary are excluded. Nested residual detections are suppressed. Up to
-150 candidates are shown, with type filters, evidence and per-result session-only
-feedback (correct/incorrect/uncertain). Feedback does not train a model.
+150 candidates are shown, with type filters, evidence and per-result local-browser
+feedback (correct/incorrect/uncertain/type correction). Feedback does not train a model.
 
 All six labels are **possible** terrain interpretations. Scores (35–80/100) rank
-heuristic shape/contrast evidence; they are not calibrated probabilities. No
-historical database, dating model or archaeologically validated classifier is
-included. Recent works, natural features, trees, interpolation and data seams can
+heuristic shape/contrast evidence; they are not calibrated probabilities. No historical database or dating model is included. Optional pretrained
+classifiers are available through the local companion; Belgian transfer accuracy
+has not been established. Recent works, natural features, trees, interpolation and data seams can
 produce false positives. Flat/subtle structures can be missed. No detections is
 not evidence of absence. The raster sample step does not increase native source
 resolution: Belgium includes 0.5–1 m LiDAR models; other source footprints can be
@@ -138,3 +138,17 @@ Tests: `node --test tests/*.test.cjs`. Build both the hosted and standalone vers
 with `node build.mjs`. See `tests/scan.test.cjs` for numerical fixtures and
 `tests/scan-data.test.cjs` / `tests/scan-ui.test.cjs` for bounded fetching and UI
 lifecycle coverage. Browser/device validation is separate from these tests.
+
+## Pretrained model lab · local user-test beta
+
+Actual pretrained Tumulus and ADAF object-detection models are available through
+an optional CPU companion. Select a model in the map, compare it with the rules,
+review/correct results, mark missed structures and export GeoJSON or a replayable
+float32 test package. Models do not train from reviews and Belgian transfer
+accuracy is unverified. Model and shape scores are kept separate.
+
+Start with [companion/README.md](companion/README.md). On Windows, complete its
+Python 3.12 setup, then run `start-scan-lab.cmd` and open http://127.0.0.1:8765 .
+The small weights are bundled; ADAF's ~518 MB checkpoints are explicit optional
+installs. GitHub Pages retains the rules-only scan and local review/export tools;
+it cannot host the Python inference runtime.

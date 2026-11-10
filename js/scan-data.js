@@ -4,14 +4,15 @@
 const core=window.TerrainScan,cache=new Map(),Z=17,SIZE=512,WORLD=SIZE*2**Z;
 const project=(lat,lon)=>({x:(lon+180)/360*WORLD,y:(1-Math.asinh(Math.tan(lat*Math.PI/180))/Math.PI)/2*WORLD});
 const unproject=(x,y)=>({lat:Math.atan(Math.sinh(Math.PI*(1-2*y/WORLD)))*180/Math.PI,lng:x/WORLD*360-180});
-function plan(bounds) {
+function plan(bounds,{halo=16}={}) {
  const south=bounds.getSouth(),north=bounds.getNorth(),west=bounds.getWest(),east=bounds.getEast();
  if(![south,north,west,east].every(Number.isFinite)||south>=north||west>=east||south<41||north>56||west< -5.5||east>16)throw new Error('Kies een gebied in België, Nederland, Frankrijk, Duitsland of Luxemburg.');
  const lat=(south+north)/2,scale=40075016.68557849*Math.cos(lat*Math.PI/180)/WORLD;
  const nw=project(north,west),se=project(south,east),widthM=(se.x-nw.x)*scale,heightM=(se.y-nw.y)*scale;
  if(widthM>600 || heightM>600)throw new Error('Het gebied is te groot. Zoom in of selecteer een zone van maximaal 600 × 600 meter.');
  if(widthM<30 || heightM<30)throw new Error('Kies een zone van minstens 30 × 30 meter.');
- const halo=16,cellSize=1,step=cellSize/scale;
+ if(![16,104].includes(halo))throw new Error('Ongeldige analysemarge.');
+ const cellSize=1,step=cellSize/scale;
  const width=Math.ceil(widthM)+2*halo,height=Math.ceil(heightM)+2*halo;
  const origin={x:nw.x-halo*step,y:nw.y-halo*step};
  const x0=Math.floor(origin.x/SIZE),y0=Math.floor(origin.y/SIZE),x1=Math.floor((origin.x+width*step)/SIZE),y1=Math.floor((origin.y+height*step)/SIZE);
