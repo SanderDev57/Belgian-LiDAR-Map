@@ -44,7 +44,7 @@ $('opacity').oninput = () => {
 $('ardennes').onclick = () => map.setView([50.21908,5.61689],17);
 function visitCoverage(center, zoom) {
  $('terrain').value = 'auto';
- $('background').value = 'satellite';
+ $('background').value = 'aerial';
  // Navigate before adding the new services to avoid a discarded request batch.
  map.setView(center,zoom,{animate:false}); app.setBase(); app.chooseTerrain();
 }
@@ -89,6 +89,16 @@ async function go() {
 }
 $('go').onclick = go;
 $('search').onkeydown = e => {if(e.key === 'Enter') go();};
+// Reopen the start-screen information without recreating layers or the map view.
+$('showSources').onclick = () => {
+ $('privacyGate').hidden = false;
+ $('map').inert = true;
+ $('panel').inert = true;
+ $('sourceDetails').open = true;
+ $('startMap').textContent = 'Return to map';
+ $('sourceDetails').scrollIntoView({block:'start'});
+ $('sourceDetails').querySelector('summary').focus();
+};
 // Two frames also cover cached CSS and browsers restoring a tab from background.
 $('startMap').onclick = () => {
  mapAllowed = true;

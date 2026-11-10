@@ -1,5 +1,14 @@
 # Data permissions for the public interactive viewer
 
+## Uniform backgrounds and credits — 10 November 2026
+
+- Street map: one worldwide OpenStreetMap Standard layer, https://tile.openstreetmap.org/{z}/{x}/{y}.png . OSM data: ODbL, https://www.openstreetmap.org/copyright . Service: https://operations.osmfoundation.org/policies/tiles/ ; privacy: https://osmfoundation.org/wiki/Privacy_Policy . Keep the short credit visible on the map. Ordinary interactive viewing only, browser HTTP caching and valid Referer required; no prefetch/offline downloads. Serve the viewer over HTTP(S) for this service; a file:// document cannot supply a valid HTTP Referer.
+- Satellite: one worldwide EOxCloudless 2016 mosaic (~10 m, 2016–17 imagery), CC BY 4.0; https://maps.eox.at/ and https://cloudless.eox.at/license-non-commercial . No country-specific overlays in this mode. High zoom enlarges older pixels.
+- Detailed aerial imagery remains a separate opt-in composite of the official regional sources and EOX fallback. These sources retain their individual licences. All previous national street basemaps (OSM Belgium, basemap.de colour, PDOK BRT, IGN Plan IGN and ACT Carte de base) are retired; historical references below are not active services.
+- Full source, licence and privacy information is on the start screen in an expandable section, reopenable with **Sources, licences & privacy**. Required active-layer credits remain visible in Leaflet's attribution control. Credits are not hidden solely by a disclaimer.
+- Esri World Imagery is not integrated: the item's linked terms summary requires Esri software or an ArcGIS Online subscription for this use, https://goto.arcgis.com/termsofuse/viewsummary . Anonymous technical access is not a licence. A high-resolution uniform global service would require a separately licensed provider; no account, key or paid plan is configured.
+
+
 Reviewed 10 November 2026 against the provider sources linked below. Scope: normal interactive browser display, comparison, opacity and reprojection. This is a record of permissions and implementation choices, not a blanket legal certification or a licence for unrelated reuse. Service capacity, future terms and deployment-specific responsibilities remain separate from dataset copyright.
 
 | Source used | Permission basis for this viewer | Credits and implementation |

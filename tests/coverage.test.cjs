@@ -15,7 +15,7 @@ vm.runInContext(fs.readFileSync(require('node:path').join(__dirname,'../js/layer
 assert.equal(attached.size,0);map._loaded=true;app.setBase();assert.equal(app.getTerrains().length,0);
 el.terrain.value='auto';app.chooseTerrain();assert.ok(app.getTerrains().some(l=>l.url.includes('DHMV')));assert.ok(!app.getTerrains().some(l=>['NL','FR'].includes(l.options.coverageCountry)),'No Dutch/French requests while wholly in Belgium');
 center=[52.101,5.927];handlers.moveend.forEach(fn=>fn());assert.ok(app.getTerrains().every(l=>l.options.coverageCountry==='NL'),'No German services in Dutch interior');const ahn=app.getTerrains().filter(l=>l.options.paced);assert.ok(ahn.length>=2);assert.ok(ahn[0].url.includes('tile/{z}/{x}/{y}?style='));assert.ok(decodeURIComponent(ahn[0].url).includes('"shade"'));assert.ok(app.getTerrains().every(l=>!['NL','FR'].includes(l.options.coverageCountry)||l.options.coverageCountry==='NL'));
-el.background.value='satellite';app.setBase();assert.ok(all.find(l=>l.url.includes('Actueel_orthoHR')).getContainer().style.clipPath.startsWith('path('));
+el.background.value='aerial';app.setBase();assert.ok(all.find(l=>l.url.includes('Actueel_orthoHR')).getContainer().style.clipPath.startsWith('path('));
 center=[49.77,4.72];handlers.moveend.forEach(fn=>fn());const fr=app.getTerrains().filter(l=>l.options.coverageCountry==='FR');assert.equal(fr.length,3);assert.equal(app.getTerrains().length,3,'No Belgian services in French interior');assert.ok(fr.some(l=>l.url.includes('LIDAR-HD_MNT')));assert.equal(fr.filter(l=>l.options.allowMissing).length,1);assert.ok(!app.getTerrains().some(l=>l.options.paced));
 app.setOpacity(50);assert.equal(pane.style.opacity,'0.5');assert.ok(app.getTerrains().every(l=>l.options.opacity===undefined));
 el.terrain.value='off';app.chooseTerrain();assert.equal(app.getTerrains().length,0);assert.ok(all.every(l=>l.options.attribution));
@@ -30,7 +30,7 @@ center=[52.101,5.927];handlers.moveend.forEach(fn=>fn());assert.equal(app.getTer
 center=[49.755,6.1];zoom=17;handlers.moveend.forEach(fn=>fn());
 assert.equal(app.getTerrains().length,1);const lu=app.getTerrains()[0];assert.equal(lu.options.layers,'2978');assert.equal(lu.options.clipCountry,'LU');
 assert.ok(all.some(l=>l.url.includes('ortho_2025') && l.options.clipCountry==='LU'));
-const luBase=all.find(l=>l.url.includes('/basemap/'));assert.ok(luBase.getTileUrl({z:8,x:132,y:86}).includes('/08/132/86.png'));
+const luPhoto=all.find(l=>l.url.includes('/ortho_2025/'));assert.ok(luPhoto.getTileUrl({z:8,x:132,y:86}).includes('/08/132/86.jpeg'));
 // Opaque map edges must be clipped, including Belgium/Germany at broad zooms.
 assert.ok(all.filter(l=>l.options.pane==='backgroundPane' && l.options.coverageCountry).every(l=>l.options.clipCountry===l.options.coverageCountry));
 // A loaded/unloaded failed tile clears the warning; retry only the visible failure.
@@ -48,3 +48,23 @@ assert.equal(reports,beforeReports);assert.equal(frames.length,1);
 flushFrames();assert.equal(reports,beforeReports+1);assert.equal(el.retryTiles.hidden,false);
 lu.emit('tileunload',{tile:tileFailure});flushFrames();assert.equal(el.retryTiles.hidden,true);
 console.log('PASS: tile status scans coalesce across a 100-event burst.');
+
+// Uniform modes attach one global provider and do not clip at country borders.
+el.terrain.value='off';app.chooseTerrain();
+for(const position of [[50.7,4.2],[51.2,10.4],[52.1,5.9],[49.7,4.7],[49.75,6.1],[40,-100]]) {
+ center=position;
+ for(const [mode,host] of [['osm','tile.openstreetmap.org'],['satellite','tiles.maps.eox.at']]) {
+  el.background.value=mode;app.setBase();
+  const active=[...attached].flatMap(g=>g.getLayers());
+  assert.equal(active.length,1,mode+' attaches one global layer');
+  assert.ok(active[0].url.includes(host));
+  assert.equal(active[0].options.bounds,undefined);
+  assert.equal(active[0].options.clipCountry,undefined);
+ }
+}
+assert.ok(!all.some(l=>l.url.includes('tile.openstreetmap.be')||l.url.includes('PLANIGNV2')||l.url.includes('brt-achtergrondkaart')));
+console.log('PASS: uniform global backgrounds across all five countries and outside Europe.');
+
+ctx.window.location={protocol:'file:'};el.background.value='osm';app.setBase();
+assert.equal([...attached].flatMap(g=>g.getLayers()).length,0,'file pages do not send OSM requests without Referer');
+assert.match(el.backgroundHint.textContent,/HTTP/);

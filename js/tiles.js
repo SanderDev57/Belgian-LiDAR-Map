@@ -39,7 +39,9 @@ function release(task) {
 }
 function retryUrl(url,attempt) {
  if(!attempt)return url;
- const parsed=new URL(url);parsed.searchParams.set('_retry',String(attempt));return parsed.href;
+ const parsed=new URL(url);
+ if(parsed.hostname==='tile.openstreetmap.org')return url;
+ parsed.searchParams.set('_retry',String(attempt));return parsed.href;
 }
 function install(layer) {
  layer.createTile=function(coords,done) {

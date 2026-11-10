@@ -1,10 +1,19 @@
 # Belgian LiDAR Map
 
+## Uniform backgrounds and credits — 10 November 2026
+
+- Street map: one worldwide OpenStreetMap Standard layer, https://tile.openstreetmap.org/{z}/{x}/{y}.png . OSM data: ODbL, https://www.openstreetmap.org/copyright . Service: https://operations.osmfoundation.org/policies/tiles/ ; privacy: https://osmfoundation.org/wiki/Privacy_Policy . Keep the short credit visible on the map. Ordinary interactive viewing only, browser HTTP caching and valid Referer required; no prefetch/offline downloads. Serve the viewer over HTTP(S) for this service; a file:// document cannot supply a valid HTTP Referer.
+- Satellite: one worldwide EOxCloudless 2016 mosaic (~10 m, 2016–17 imagery), CC BY 4.0; https://maps.eox.at/ and https://cloudless.eox.at/license-non-commercial . No country-specific overlays in this mode. High zoom enlarges older pixels.
+- Detailed aerial imagery remains a separate opt-in composite of the official regional sources and EOX fallback. These sources retain their individual licences. All previous national street basemaps (OSM Belgium, basemap.de colour, PDOK BRT, IGN Plan IGN and ACT Carte de base) are retired; historical references below are not active services.
+- Full source, licence and privacy information is on the start screen in an expandable section, reopenable with **Sources, licences & privacy**. Required active-layer credits remain visible in Leaflet's attribution control. Credits are not hidden solely by a disclaimer.
+- Esri World Imagery is not integrated: the item's linked terms summary requires Esri software or an ArcGIS Online subscription for this use, https://goto.arcgis.com/termsofuse/viewsummary . Anonymous technical access is not a licence. A high-resolution uniform global service would require a separately licensed provider; no account, key or paid plan is configured.
+
+
 An independent, free static viewer comparing official Belgian, German, Dutch, French and Luxembourg terrain with aerial photography or an OpenStreetMap street map. No affiliation with or endorsement by the data providers.
 
 ## Run
 Open `index.html` in a modern browser, or serve the folder on a static web host.
-Read the provider notice and select **Open map**. Only the local street-map sources load initially. Select aerial imagery and terrain from the menu when needed. Internet access is required for map services.
+Read the provider notice and select **Open map**. Only the worldwide OpenStreetMap street layer loads initially. Select aerial imagery and terrain from the menu when needed. Internet access is required for map services.
 Coordinates use latitude, longitude, for example `50.7338, 4.2345`. You can also enter a place name or address in the Belgium/Germany/Netherlands/metropolitan France/Luxembourg region and press Search or Enter. Searches use Photon / komoot; coordinates stay local.
 
 ## Website structure
@@ -48,8 +57,8 @@ The website host may independently process page-access logs.
 ## Automatic terrain and imagery
 Select **Automatic · finest connected detail** once. The viewer combines connected sources without jumping or requiring a regional selection: French broader terrain below French LiDAR HD 0.5 m (where published), Dutch AHN4/5/6 0.5 m (newest available pixels on top), and German DGM5 overview below RLP 1 m, Wallonia 0.5 m, Flanders 0.25 m and NRW 0.25 m hillshade. Transparent edges reveal the lower source, so overlapping bounding rectangles no longer cause blank state selections. "Finest" means the finest connected source with available pixels, not every dataset that might exist. This update does not claim sub-metre terrain everywhere in Germany.
 Only sources whose bounds intersect the viewport are attached. Panning updates coverage, credits and comparison clipping. Overzoom does not create source detail. Composite opacity is applied once to the terrain pane to avoid double blending in overlaps. Existing vertical and horizontal comparison modes remain available.
-**Satellite / aerial** combines EOX's older 2016–17 satellite overview with official Belgian aerial photos, NRW 10 cm aerial photos RLP 20 cm aerial photos, Dutch PDOK 5–8 cm imagery and French IGN BD ORTHO (typically 20 cm). The detailed sources sit above the overview; transparent gaps reveal it. Outside connected aerial regions the image is an older, roughly 10 m satellite overview, visibly labelled in the menu. Wallonia remains the labelled 2023 summer mosaic; other providers have varying capture dates. Imagery is not live.
-Street maps combine OSM Belgium / Champs-Libres with basemap.de for Germany, PDOK BRT for the Netherlands and IGN Plan IGN for metropolitan France. Only street maps load on startup. Terrain and imagery are enabled by the visitor. Eifel, Germany, Netherlands and France shortcuts enable automatic terrain and satellite/aerial comparison. Place/address search covers the wider Belgium/Germany/Netherlands/metropolitan France/Luxembourg region; coordinates remain local.
+**Detailed aerial imagery** combines EOX's older 2016–17 satellite overview with official Belgian aerial photos, NRW 10 cm aerial photos RLP 20 cm aerial photos, Dutch PDOK 5–8 cm imagery and French IGN BD ORTHO (typically 20 cm). The detailed sources sit above the overview; transparent gaps reveal it. Outside connected aerial regions the image is an older, roughly 10 m satellite overview, visibly labelled in the menu. Wallonia remains the labelled 2023 summer mosaic; other providers have varying capture dates. Imagery is not live.
+The street-map option uses the same worldwide OpenStreetMap Standard layer in every country. Only street maps load on startup. Terrain and imagery are enabled by the visitor. Eifel, Germany, Netherlands and France shortcuts enable automatic terrain and detailed aerial comparison. Place/address search covers the wider Belgium/Germany/Netherlands/metropolitan France/Luxembourg region; coordinates remain local.
 
 ## Data permissions and service use
 See [DATA_PERMISSIONS.md](DATA_PERMISSIONS.md) for the dated source-by-source review, and [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) for attribution, source, service and privacy links. A disclaimer cannot override provider conditions. Data are not relicensed under the application's MIT licence.

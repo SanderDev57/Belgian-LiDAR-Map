@@ -6,7 +6,7 @@ function harness() {
    get textContent(){return this.text||''},set textContent(s){this.text=s;if(name==='status')statusWrites++;if(name==='coords')coordinateWrites++;},
    classList:{toggle(){}},setAttribute(k,v){this.attrs[k]=v},getAttribute(k){return this.attrs[k]},
    addEventListener(k,fn){this.events[k]=fn},querySelector(){return element('knob')},
-   getBoundingClientRect(){reads++;return {left:0,top:0,width:1000,height:800}},setPointerCapture(){},blur(){}});
+   getBoundingClientRect(){reads++;return {left:0,top:0,width:1000,height:800}},setPointerCapture(){},blur(){},focus(){},scrollIntoView(){}});
   return elements.get(name);
  }
  element('compare').checked=true;
@@ -58,4 +58,18 @@ test('completed zoom saves coordinates once, and unchanged coordinates skip writ
  h.map.setView([51.2,4.4]);h.map.fire('zoomend');assert.equal(h.coordinateWrites,before);
  h.map.fire('moveend');assert.equal(h.coordinateWrites,before+1);
  h.map.fire('moveend');assert.equal(h.coordinateWrites,before+1);
+});
+
+test('source credits reopen the gate and return without changing the map view',()=>{
+ const h=harness();h.load('app');h.element('startMap').onclick();h.flush();
+ h.map.setView([49.75,6.1]);const center=h.map.getCenter();
+ h.element('showSources').onclick();
+ assert.equal(h.element('privacyGate').hidden,false);
+ assert.equal(h.element('sourceDetails').open,true);
+ assert.equal(h.element('map').inert,true);
+ assert.equal(h.element('panel').inert,true);
+ h.element('startMap').onclick();h.flush();
+ assert.equal(h.element('privacyGate').hidden,true);
+ assert.equal(h.element('map').inert,false);
+ assert.deepEqual(h.map.getCenter(),center);
 });
