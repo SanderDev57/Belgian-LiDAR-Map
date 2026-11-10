@@ -29,9 +29,9 @@ function ahn(path,timestamp,zIndex,bounds=nlBounds) {
   ...common,pane:'terrainPane',bounds,noWrap:true,maxNativeZoom:18,zIndex,attribution:ahnCredit,coverageCountry:'NL',paced:true
  });
 }
-function wms(url,layers,attribution,bounds,maxNativeZoom,pane,zIndex) {
+function wms(url,layers,attribution,bounds,maxNativeZoom,pane,zIndex,coverageCountry='DE') {
  return L.tileLayer.wms(url,{...common,layers,styles:'',format:'image/png',transparent:true,
-  version:'1.3.0',crs:L.CRS.EPSG3857,bounds,maxNativeZoom,noWrap:true,attribution,pane,zIndex,coverageCountry:'DE'});
+  version:'1.3.0',crs:L.CRS.EPSG3857,bounds,maxNativeZoom,noWrap:true,attribution,pane,zIndex,coverageCountry});
 }
 // SPW's image export returns transparent tiles outside its true coverage, including
 // places inside its rectangular extent. Use Leaflet's normal image lifecycle/retry.
@@ -48,11 +48,11 @@ const SpwLayer = L.TileLayer.extend({
 });
 function spw(path,options) {
  return new SpwLayer('https://geoservices.wallonie.be/arcgis/rest/services/'+path+'/MapServer/export',{
-  ...common,noWrap:true,coverageCountry:'BE',...options
+  ...common,noWrap:true,coverageCountry:'WA',...options
  });
 }
 const aerialFl = L.tileLayer('https://geo.api.vlaanderen.be/OMWRGBMRVL/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=omwrgbmrvl&STYLE=&FORMAT=image/png&TILEMATRIXSET=GoogleMapsVL&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}', {
- ...common,coverageCountry:'BE',pane:'backgroundPane',maxNativeZoom:21,zIndex:30,bounds:[[50.685,2.53],[51.52,5.92]],
+ ...common,coverageCountry:'FB',pane:'backgroundPane',maxNativeZoom:21,zIndex:30,bounds:[[50.685,2.53],[51.52,5.92]],
  attribution:'Bron: Luchtopnamen <a href="https://www.vlaanderen.be/datavindplaats/catalogus/wmts-orthofotomozaiek-middenschalig-winteropnamen-kleur-meest-recent-vlaanderen">Digitaal Vlaanderen</a>'
 });
 const aerialWa = spw('IMAGERIE/ORTHO_2023_ETE',{
@@ -60,7 +60,7 @@ const aerialWa = spw('IMAGERIE/ORTHO_2023_ETE',{
  attribution:'© <a href="https://geoportail.wallonie.be/catalogue/ad55c2ce-62ad-4c3c-b3cf-8fbc270a6b6e.html">SPW · Orthophotos 2023 Été</a> · <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>'
 });
 function fl(name) {
- return L.tileLayer('https://geo.api.vlaanderen.be/DHMV/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER='+name+'&STYLE=&FORMAT=image/png&TILEMATRIXSET=GoogleMapsVL&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}',{...common,coverageCountry:'BE',zIndex:40,pane:'terrainPane',maxNativeZoom:21,attribution:flCredit,bounds:[[50.68,2.53],[51.52,5.95]]});
+ return L.tileLayer('https://geo.api.vlaanderen.be/DHMV/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER='+name+'&STYLE=&FORMAT=image/png&TILEMATRIXSET=GoogleMapsVL&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}',{...common,coverageCountry:'FL',zIndex:40,pane:'terrainPane',maxNativeZoom:21,attribution:flCredit,bounds:[[50.68,2.53],[51.52,5.95]]});
 }
 const terrainSources = [
  // Fine sources cover coarser ones; transparent edges and missing tiles reveal the fallback.
@@ -71,17 +71,17 @@ const terrainSources = [
  ahn('51e11c02-1065-463d-a0b0-263d80293b16','41eaf86f-fa84-48f7-a949-355044ed0e4e',34,[[50.7,3.3],[53.65,6.445]]),
  ahn('231a4c66-9de9-4f41-91af-e4e991df9160','05df775a-ae39-4bb0-a52e-d3044c993d1e',35,[[51.8,3.94],[53.7,7.37]]),
  wms('https://sgx.geodatenzentrum.de/wms_basemapde_schummerung','de_basemapde_web_raster_hillshade',deCredit,deBounds,14,'terrainPane',10),
- wms('https://geo4.service24.rlp.de/wms/shade1m.fcgi','rp_shade1m',rlpCredit,rlpBounds,17,'terrainPane',20),
+ wms('https://geo4.service24.rlp.de/wms/shade1m.fcgi','rp_shade1m',rlpCredit,rlpBounds,17,'terrainPane',20,'RLP'),
  spw('RELIEF/WALLONIE_MNT_2021_2022_HILLSHADE',{pane:'terrainPane',zIndex:30,maxNativeZoom:21,attribution:waCredit,bounds:[[49.49,2.84],[50.85,6.5]]}),
  fl('DHMV_II_HILL_25cm'),
- wms('https://www.wms.nrw.de/geobasis/wms_nw_dgm-schummerung','nw_dgm-schummerung_pan',nrwCredit,nrwBounds,19,'terrainPane',50)
+ wms('https://www.wms.nrw.de/geobasis/wms_nw_dgm-schummerung','nw_dgm-schummerung_pan',nrwCredit,nrwBounds,19,'terrainPane',50,'NRW')
 ];
 const satelliteOverview = L.tileLayer('https://tiles.maps.eox.at/wmts/1.0.0/s2cloudless_3857/default/GoogleMapsCompatible/{z}/{y}/{x}.jpg',{
  ...common,pane:'backgroundPane',zIndex:0,bounds:combinedBounds,maxNativeZoom:14,noWrap:true,
  attribution:'<a href="https://cloudless.eox.at">EOxCloudless</a> by <a href="https://eox.at">EOX IT Services GmbH</a> (Contains modified Copernicus Sentinel data 2016 &amp; 2017) · <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>'
 });
-const aerialRlp = wms('https://geo4.service24.rlp.de/wms/rp_dop20.fcgi','rp_dop20',rlpCredit,rlpBounds,19,'backgroundPane',10);
-const aerialNrw = wms('https://www.wms.nrw.de/geobasis/wms_nw_dop','nw_dop_rgb',nrwCredit,nrwBounds,20,'backgroundPane',40);
+const aerialRlp = wms('https://geo4.service24.rlp.de/wms/rp_dop20.fcgi','rp_dop20',rlpCredit,rlpBounds,19,'backgroundPane',10,'RLP');
+const aerialNrw = wms('https://www.wms.nrw.de/geobasis/wms_nw_dop','nw_dop_rgb',nrwCredit,nrwBounds,20,'backgroundPane',40,'NRW');
 const streetBe = L.tileLayer('https://tile.openstreetmap.be/osmbe/{z}/{x}/{y}.png',{
  ...common,coverageCountry:'BE',pane:'backgroundPane',zIndex:0,bounds:belgiumBounds,maxNativeZoom:18,
  attribution:'© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors · Tiles generated by <a href="https://www.champs-libres.coop/">Champs-Libres</a>'
