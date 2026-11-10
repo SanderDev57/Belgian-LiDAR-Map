@@ -912,11 +912,11 @@ const germanViews = {
  de:{center:[51.16,10.45],zoom:6,bounds:deBounds},
  decomb:{center:[51.16,10.45],zoom:6,bounds:deBounds}
 };
-function ensureGermanView(name) {
+function ensureGermanView(name, openRegion = false) {
  const view = germanViews[name];
  if(!view || !map._loaded) return;
  const detailed = name === 'nrw' || name === 'nrwne' || name === 'rlp';
- if(!L.latLngBounds(view.bounds).contains(map.getCenter()) || (detailed && map.getZoom() < 10)) {
+ if((detailed && openRegion) || !L.latLngBounds(view.bounds).contains(map.getCenter()) || (detailed && map.getZoom() < 10)) {
   map.setView(view.center,view.zoom,{animate:false});
  }
 }
@@ -1005,7 +1005,10 @@ app.chooseTerrain = () => {
  // A German selection must reveal its coverage and use a compatible background.
  // Keep an explicitly disabled background disabled.
  if(germanViews[next]) {
-  ensureGermanView(next);
+  // State bounding boxes overlap: a point in the rectangle may be outside the state.
+  // Open a known covered location when changing regions, preserving NW/NE comparisons.
+  const sameRegion = next === key || (['nrw','nrwne'].includes(next) && ['nrw','nrwne'].includes(key));
+  ensureGermanView(next,!sameRegion);
   if($('background').value !== 'none' && $('background').value !== 'germany') {
    $('background').value = 'germany'; app.setBase();
   }
