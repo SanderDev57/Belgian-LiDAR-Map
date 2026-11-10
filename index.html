@@ -8,9 +8,10 @@
 <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
-<section id="privacyGate" class="privacy-gate" aria-labelledby="privacyTitle"><div class="privacy-card"><h1 id="privacyTitle">Belgian LiDAR Map</h1><p>Explore official Belgian and German terrain, with Belgian aerial imagery and a German colour map.</p><p>Opening the map connects your browser to OpenStreetMap Belgium / Champs-Libres. Selecting German layers connects to BKG, Geobasis NRW or LVermGeo Rheinland-Pfalz. Selecting Belgian aerial imagery or terrain also connects to Digitaal Vlaanderen and SPW. These providers receive your IP address and the area you view. Place and address searches connect to Photon / komoot when submitted.</p><details><summary>Provider privacy information</summary><p>This viewer requests maps directly from the providers you choose. They receive your IP address, browser/request information and tile coordinates, which reveal the area being viewed. Place and address searches are sent to Photon / komoot only when you press Search or Enter. This service receives your search text, IP address and browser/request information. Coordinate input is processed locally. The application adds no analytics, cookies or browser storage; the current map position is kept in the URL fragment and can be included when you share the link.</p>
+<section id="privacyGate" class="privacy-gate" aria-labelledby="privacyTitle"><div class="privacy-card"><h1 id="privacyTitle">Belgian LiDAR Map</h1><p>Explore Belgian and German terrain with automatic detail and satellite / aerial comparison.</p><p>Opening the map loads street maps from OpenStreetMap Belgium / Champs-Libres and, where visible, BKG. Enabling terrain or aerial imagery automatically contacts the sources covering the viewed area: Digitaal Vlaanderen, SPW, BKG, Geobasis NRW, LVermGeo Rheinland-Pfalz and EOX. These providers receive your IP address and the area you view. Place and address searches connect to Photon / komoot when submitted.</p><details><summary>Provider privacy information</summary><p>This viewer requests maps directly from the providers you choose. They receive your IP address, browser/request information and tile coordinates, which reveal the area being viewed. Place and address searches are sent to Photon / komoot only when you press Search or Enter. This service receives your search text, IP address and browser/request information. Coordinate input is processed locally. The application adds no analytics, cookies or browser storage; the current map position is kept in the URL fragment and can be included when you share the link.</p>
 <p><strong>Digitaal Vlaanderen:</strong> the agency processes request logs and IP addresses to secure its geographic services as a task in the public interest. IP addresses are retained for at most 90 days and are accessible to service administrators. You may request access, correction, erasure, restriction or object to processing; objecting may prevent service access. Contact <a href="mailto:privacy@digitaal.vlaanderen.be">privacy@digitaal.vlaanderen.be</a>. See its <a href="https://www.vlaanderen.be/digitaal-vlaanderen/onze-diensten-en-platformen/geografische-webdiensten/gebruiksrecht-en-privacyverklaring-geografische-webdiensten" target="_blank" rel="noopener">full service privacy notice, controller details and complaint information</a>.</p>
-<p><strong>German services:</strong> selected German layers send map requests directly to BKG, Geobasis NRW or LVermGeo Rheinland-Pfalz. See <a href="https://www.bkg.bund.de/DE/Service/Datenschutz/datenschutz.html">BKG privacy</a>, <a href="https://www.bezreg-koeln.nrw.de/datenschutz">Bezirksregierung Köln privacy</a> and <a href="https://lvermgeo.rlp.de/datenschutz">LVermGeoRP privacy</a>.</p>
+<p><strong>German services:</strong> automatic terrain, street maps and aerial imagery send relevant map requests directly to BKG, Geobasis NRW or LVermGeo Rheinland-Pfalz. See <a href="https://www.bkg.bund.de/DE/Service/Datenschutz/datenschutz.html">BKG privacy</a>, <a href="https://www.bezreg-koeln.nrw.de/datenschutz">Bezirksregierung Köln privacy</a> and <a href="https://lvermgeo.rlp.de/datenschutz">LVermGeoRP privacy</a>.</p>
+<p><strong>EOX:</strong> satellite overview requests go to EOX IT Services GmbH, which receives your IP/browser information and viewed tiles. <a href="https://eox.at/privacy-notice/">EOX privacy</a>. The overview is the CC BY 4.0 2016 layer (2016–17 imagery), not current aerial photography.</p>
 <p><strong>SPW:</strong> consult the <a href="https://geoportail.wallonie.be/vie-privee.html" target="_blank" rel="noopener">SPW privacy notice</a>; privacy contact: <a href="mailto:dpo@spw.wallonie.be">dpo@spw.wallonie.be</a>.</p>
 <p><strong>OpenStreetMap Belgium / Champs-Libres:</strong> street-map requests go to their tile server. See the <a href="https://github.com/osmbe/openstreetmap-carto-be/wiki/Tile-Usage-Policy" target="_blank" rel="noopener">service and attribution policy</a> and <a href="https://www.champs-libres.coop/" target="_blank" rel="noopener">tile provider</a>.</p>
 <p>When this viewer is hosted online, the website host also receives ordinary page requests and may keep access logs. Hosting-specific privacy information must be supplied by the website operator.</p></details><p>No map requests are sent until you open the map. You can leave this page without loading it.</p><p>Map access is subject to the <a href="https://www.vlaanderen.be/digitaal-vlaanderen/onze-diensten-en-platformen/geografische-webdiensten/gebruiksrecht-en-privacyverklaring-geografische-webdiensten" target="_blank" rel="noopener">Digitaal Vlaanderen service conditions</a>, <a href="https://geoportail.wallonie.be/files/documents/ConditionsSPW/LicServicesSPW.pdf" target="_blank" rel="noopener">SPW service conditions</a> and, when selected, the <a href="https://github.com/osmbe/openstreetmap-carto-be/wiki/Tile-Usage-Policy" target="_blank" rel="noopener">OSM Belgium tile policy</a>.</p><button id="startMap" type="button">Open map</button><noscript><p>Enable JavaScript to use this viewer.</p></noscript></div></section>
@@ -41,25 +42,13 @@
 <button id="eifel">Eifel · 25 cm</button>
 <button id="germany">Germany</button>
 </div>
-<p class="muted">Search area: <strong id="searchArea">Belgium</strong>. Search data: <a href="https://www.openstreetmap.org/copyright">© OpenStreetMap contributors</a> · <a href="https://github.com/komoot/photon">Photon / komoot</a>. <a href="https://www.komoot.com/privacy">Search provider privacy</a>.</p>
+<p class="muted">Search area: <strong id="searchArea">Belgium &amp; Germany region</strong>. Search data: <a href="https://www.openstreetmap.org/copyright">© OpenStreetMap contributors</a> · <a href="https://github.com/komoot/photon">Photon / komoot</a>. <a href="https://www.komoot.com/privacy">Search provider privacy</a>.</p>
 <h3>Terrain layer</h3>
 <select class="field" id="terrain">
-<option value="auto">Automatic (Wallonia / Flanders)</option>
-<option value="wa">Wallonia · 2021–22 hillshade 0.5 m</option>
-<option value="fl">Flanders · hillshade 0.25 m</option>
-<option value="svf">Flanders · sky-view factor 0.25 m</option>
-<optgroup label="Germany · detailed regional terrain">
-<option value="nrw">North Rhine-Westphalia · hillshade NW · 0.25 m</option>
-<option value="nrwne">North Rhine-Westphalia · hillshade NE · 0.25 m</option>
-<option value="rlp">Rhineland-Palatinate · hillshade · 1 m</option>
-</optgroup>
-<optgroup label="Germany · nationwide overview">
-<option value="de">Germany · hillshade · DGM5 overview</option>
-<option value="decomb">Germany · combined hillshade · DGM5 overview</option>
-</optgroup>
+<option value="auto">Automatic · finest detail (Belgium + Germany)</option>
 <option value="off" selected>No LiDAR</option>
 </select>
-<p class="muted" id="terrainHint">Automatic selection covers Belgium only. Select German layers manually; selecting one opens its coverage and selects a German map background.</p>
+<p class="muted" id="terrainHint">Finest connected coverage wins automatically: Flanders / NRW 25 cm → Wallonia 50 cm → Rhineland-Palatinate 1 m → German DGM5 overview. Coarser terrain remains visible in gaps. Zooming cannot add source detail.</p>
 <h3>Compare</h3>
 <label class="choice">
 <input type="checkbox" id="compare" checked>
@@ -72,11 +61,11 @@
 <p class="muted">Vertical: background on the left, LiDAR on the right. Horizontal: background above, LiDAR below. Drag the white handle to compare. Only one comparison mode can be enabled.</p>
 <h3>Background</h3>
 <select class="field" id="background">
-<option value="satellite">Official Belgian aerial photography</option>
-<option value="osm" selected>OpenStreetMap Belgium</option>
-<option value="germany">Germany · basemap.de colour map</option>
+<option value="satellite">Satellite / aerial · automatic coverage</option>
+<option value="osm" selected>Street map · Belgium + Germany</option>
 <option value="none">No background</option>
 </select>
+<p class="muted" id="backgroundHint">Street maps for Belgium and Germany.</p>
 <h3>LiDAR opacity · <span id="opacityValue">100%</span>
 </h3>
 <input id="opacity" type="range" min="0" max="100" value="100">
@@ -86,23 +75,25 @@
 <p class="muted" id="selected">Tap map for coordinates.</p>
 <div class="footer">Online connection required. Zooming past native detail does not add resolution.
 <details class="sources"><summary>Sources, licences &amp; privacy</summary>
-<p>Independent viewer; no official affiliation or endorsement. Data remain subject to their owners' licences and service conditions. Online access is provided without availability or accuracy guarantees.</p>
+<p>Independent viewer; no provider affiliation or endorsement. Source permissions were reviewed on 10 November 2026 for this public interactive viewer. Map data keep their own licences and service conditions; the MIT code licence does not cover them. Keep provider credits and licence links visible, including in shared screenshots. Source resolution, capture date and positional accuracy differ; this is not a survey or a guarantee that features exist. A disclaimer does not grant extra data rights.</p>
 <ul>
-<li>Flanders terrain: <a href="https://www.vlaanderen.be/datavindplaats/catalogus/digitaal-hoogtemodel-ii-multidirectionale-hillshade-25-cm">DHM II hillshade</a> and <a href="https://www.vlaanderen.be/datavindplaats/catalogus/digitaal-hoogtemodel-vlaanderen-ii-skyview-factor-25-cm">SVF</a>. Bron: Digitaal Vlaanderen. Public geographic service use is subject to the linked dataset and service conditions.</li>
+<li>Flanders terrain: <a href="https://www.vlaanderen.be/datavindplaats/catalogus/digitaal-hoogtemodel-ii-multidirectionale-hillshade-25-cm">DHM II hillshade</a>. Bron: Digitaal Vlaanderen. Public geographic service use is subject to the linked dataset and service conditions.</li>
 <li>Flanders/Brussels aerial imagery: <a href="https://www.vlaanderen.be/datavindplaats/catalogus/wmts-orthofotomozaiek-middenschalig-winteropnamen-kleur-meest-recent-vlaanderen">most recent winter orthophoto mosaic</a>. Bron: Luchtopnamen Digitaal Vlaanderen. See dataset metadata for dates and reuse conditions.</li>
 <li>Wallonia terrain: Service public de Wallonie (SPW), <a href="https://geoportail.wallonie.be/catalogue/89b00953-efdb-449b-baec-1c8e7ce483b5.html">MNT 2021–2022 hillshade</a>, © SPW 2021–2022, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>.</li>
 <li>Wallonia aerial imagery: Service public de Wallonie (SPW), <a href="https://geoportail.wallonie.be/catalogue/ad55c2ce-62ad-4c3c-b3cf-8fbc270a6b6e.html">Orthophotos 2023 Été</a>, © SPW 2023, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>. This full-coverage 2023 layer is not a claim to the latest imagery everywhere.</li>
 <li>SPW services: <a href="https://geoportail.wallonie.be/files/documents/ConditionsSPW/LicServicesSPW.pdf">service terms</a>. Normal interactive viewing only; no bulk downloads or prefetching.</li>
-<li>Germany overview and colour map: © GeoBasis-DE / <a href="https://www.bkg.bund.de">BKG</a> (2026), <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>. <a href="https://basemap.de/produkte-und-dienste/web-raster-schummerung/">Terrain documentation</a> and <a href="https://sgx.geodatenzentrum.de/public/gdz/lizenz/deu/nutzungsbedingungen_basemapde.pdf">terms</a>. Hillshade uses DGM5 with rendered pixels approximately 6.4 m; use regional layers for fine features.</li>
-<li>North Rhine-Westphalia: <a href="https://www.bezreg-koeln.nrw.de/geobasis-nrw/produkte-und-dienste/hoehenmodelle/digitale-gelaendemodelle/gelaendeschummerung">Geobasis NRW · 0.25 m hillshade</a>, NW/NE lighting, <a href="https://www.govdata.de/dl-de/zero-2-0">dl-de/zero-2-0</a>.</li>
-<li>Rhineland-Palatinate: ©GeoBasis-DE / <a href="https://www.lvermgeo.rlp.de">LVermGeoRP</a> 2026, <a href="https://www.govdata.de/dl-de/by-2-0">dl-de/by-2-0</a> [Daten bearbeitet]. <a href="https://www.geoportal.rlp.de/mapbender/php/mod_showMetadata.php?id=49357&amp;layout=tabs&amp;resource=layer">Hillshade 1 m metadata</a>.</li>
+<li>Germany overview and colour map: © GeoBasis-DE / <a href="https://www.bkg.bund.de">BKG</a> (2026), <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>. <a href="https://basemap.de/produkte-und-dienste/web-raster-schummerung/">Terrain documentation</a> and <a href="https://sgx.geodatenzentrum.de/public/gdz/lizenz/deu/nutzungsbedingungen_basemapde.pdf">terms</a>. Hillshade uses DGM5 with rendered pixels approximately 6.4 m; the viewer automatically overlays the connected finer regional layers.</li>
+<li>North Rhine-Westphalia: <a href="https://www.bezreg-koeln.nrw.de/geobasis-nrw/produkte-und-dienste/hoehenmodelle/digitale-gelaendemodelle/gelaendeschummerung">Geobasis NRW · 0.25 m hillshade</a> and <a href="https://www.wms.nrw.de/geobasis/wms_nw_dop?SERVICE=WMS&amp;REQUEST=GetCapabilities">10 cm aerial photography</a>, <a href="https://www.govdata.de/dl-de/zero-2-0">dl-de/zero-2-0</a>.</li>
+<li>Rhineland-Palatinate: ©GeoBasis-DE / <a href="https://www.lvermgeo.rlp.de">LVermGeoRP</a> 2026, <a href="https://www.govdata.de/dl-de/by-2-0">dl-de/by-2-0</a> [Daten bearbeitet]. <a href="https://www.geoportal.rlp.de/mapbender/php/mod_showMetadata.php?id=49357&amp;layout=tabs&amp;resource=layer">Hillshade 1 m metadata</a> and <a href="https://geo4.service24.rlp.de/wms/rp_dop20.fcgi?SERVICE=WMS&amp;REQUEST=GetCapabilities">20 cm aerial photography</a>.</li>
+<li>Satellite fallback: <a href="https://cloudless.eox.at">EOxCloudless</a> by <a href="https://eox.at">EOX IT Services GmbH</a> (Contains modified Copernicus Sentinel data 2016 &amp; 2017), <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>. <a href="https://cloudless.eox.at/license-non-commercial">Product licence and attribution</a>. Only the 2016 vintage is used; later vintages have different conditions. This older overview fills gaps outside the connected detailed aerial services.</li>
 <li>Street map: © <a href="https://www.openstreetmap.org/copyright">OpenStreetMap contributors</a> (ODbL data), tiles generated by <a href="https://www.champs-libres.coop/">Champs-Libres</a>, under the <a href="https://github.com/osmbe/openstreetmap-carto-be/wiki/Tile-Usage-Policy">Belgian tile-service policy</a>.</li>
 </ul>
-<p>Display changes: services reproject imagery for this map; the viewer clips, scales and changes opacity to compare layers. It does not edit the underlying source datasets. Higher zoom does not add native detail. Keep credits visible in shared screenshots.</p>
+<p>Display changes: services reproject imagery for this map; the viewer clips, scales and changes opacity to compare layers. The composite puts finer sources above coarser ones, with transparent gaps showing the underlying source. It does not edit the underlying source datasets. Higher zoom does not add native detail. Keep credits visible in shared screenshots.</p>
 <h3>Privacy</h3>
 <p>This viewer requests maps directly from the providers you choose. They receive your IP address, browser/request information and tile coordinates, which reveal the area being viewed. Place and address searches are sent to Photon / komoot only when you press Search or Enter. This service receives your search text, IP address and browser/request information. Coordinate input is processed locally. The application adds no analytics, cookies or browser storage; the current map position is kept in the URL fragment and can be included when you share the link.</p>
 <p><strong>Digitaal Vlaanderen:</strong> the agency processes request logs and IP addresses to secure its geographic services as a task in the public interest. IP addresses are retained for at most 90 days and are accessible to service administrators. You may request access, correction, erasure, restriction or object to processing; objecting may prevent service access. Contact <a href="mailto:privacy@digitaal.vlaanderen.be">privacy@digitaal.vlaanderen.be</a>. See its <a href="https://www.vlaanderen.be/digitaal-vlaanderen/onze-diensten-en-platformen/geografische-webdiensten/gebruiksrecht-en-privacyverklaring-geografische-webdiensten" target="_blank" rel="noopener">full service privacy notice, controller details and complaint information</a>.</p>
-<p><strong>German services:</strong> selected German layers send map requests directly to BKG, Geobasis NRW or LVermGeo Rheinland-Pfalz. See <a href="https://www.bkg.bund.de/DE/Service/Datenschutz/datenschutz.html">BKG privacy</a>, <a href="https://www.bezreg-koeln.nrw.de/datenschutz">Bezirksregierung Köln privacy</a> and <a href="https://lvermgeo.rlp.de/datenschutz">LVermGeoRP privacy</a>.</p>
+<p><strong>German services:</strong> automatic terrain, street maps and aerial imagery send relevant map requests directly to BKG, Geobasis NRW or LVermGeo Rheinland-Pfalz. See <a href="https://www.bkg.bund.de/DE/Service/Datenschutz/datenschutz.html">BKG privacy</a>, <a href="https://www.bezreg-koeln.nrw.de/datenschutz">Bezirksregierung Köln privacy</a> and <a href="https://lvermgeo.rlp.de/datenschutz">LVermGeoRP privacy</a>.</p>
+<p><strong>EOX:</strong> satellite overview requests go to EOX IT Services GmbH, which receives your IP/browser information and viewed tiles. <a href="https://eox.at/privacy-notice/">EOX privacy</a>. The overview is the CC BY 4.0 2016 layer (2016–17 imagery), not current aerial photography.</p>
 <p><strong>SPW:</strong> consult the <a href="https://geoportail.wallonie.be/vie-privee.html" target="_blank" rel="noopener">SPW privacy notice</a>; privacy contact: <a href="mailto:dpo@spw.wallonie.be">dpo@spw.wallonie.be</a>.</p>
 <p><strong>OpenStreetMap Belgium / Champs-Libres:</strong> street-map requests go to their tile server. See the <a href="https://github.com/osmbe/openstreetmap-carto-be/wiki/Tile-Usage-Policy" target="_blank" rel="noopener">service and attribution policy</a> and <a href="https://www.champs-libres.coop/" target="_blank" rel="noopener">tile provider</a>.</p>
 <p>When this viewer is hosted online, the website host also receives ordinary page requests and may keep access logs. Hosting-specific privacy information must be supplied by the website operator.</p>
@@ -133,7 +124,8 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 </pre></details>
-<p>The original viewer code is MIT licensed. This does not license the map datasets, provider services or third-party software under MIT.</p>
+<p>Only ordinary interactive viewing is provided: no bulk requests, offline map packs or prefetching. Public services can limit access or change. The website operator remains responsible for hosting-specific privacy and contact information.
+</p><p>The original viewer code is MIT licensed. This does not license the map datasets, provider services or third-party software under MIT.</p>
 </details>
 </div>
 </div>
@@ -142,8 +134,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 </div>
 <script src="vendor/leaflet/leaflet.js"></script>
 <script src="js/map.js"></script>
-<script src="js/layers.js?v=germany-fix-3"></script>
+<script src="js/layers.js?v=combined-1"></script>
 <script src="js/comparison.js"></script>
-<script src="js/app.js?v=germany-fix-3"></script>
+<script src="js/app.js?v=combined-1"></script>
 </body>
 </html>

@@ -1,6 +1,6 @@
 # Third-party software, maps and services
 
-Reviewed: 5 November 2026. Provider conditions can change. This document records the current implementation and source links; it is not a blanket legal warranty.
+Reviewed: 10 November 2026. Provider conditions can change. This document records the current implementation and source links; it is not a blanket legal warranty.
 
 ## Application versus data
 The original application code is MIT licensed (LICENSE). The source repository contains no copies of the underlying map databases, aerial mosaics or elevation datasets. Linking to a service does not transfer ownership or grant unlimited service access.
@@ -14,7 +14,6 @@ The standalone build inlines the distribution and preserves its licence informat
 ## Digitaal Vlaanderen
 Terrain:
 - DHM II multidirectional hillshade, 25 cm: https://www.vlaanderen.be/datavindplaats/catalogus/digitaal-hoogtemodel-ii-multidirectionale-hillshade-25-cm
-- DHM II sky-view factor, 25 cm: https://www.vlaanderen.be/datavindplaats/catalogus/digitaal-hoogtemodel-vlaanderen-ii-skyview-factor-25-cm
 - WMTS: https://www.vlaanderen.be/datavindplaats/catalogus/wmts-digitaal-hoogtemodel-vlaanderen
 - Required map credit: Bron: Digitaal Vlaanderen.
 
@@ -63,7 +62,7 @@ A public repository does not grant permission to overload providers, remove cred
 - © GeoBasis-DE / BKG (2026), CC BY 4.0. BKG: https://www.bkg.bund.de ; licence: https://creativecommons.org/licenses/by/4.0/
 - Product: https://basemap.de/produkte-und-dienste/web-raster-schummerung/
 - Terms: https://sgx.geodatenzentrum.de/public/gdz/lizenz/deu/nutzungsbedingungen_basemapde.pdf
-- NRW 0.25 m hillshade, NW and NE lighting: https://www.wms.nrw.de/geobasis/wms_nw_dgm-schummerung
+- NRW 0.25 m hillshade, NW lighting: https://www.wms.nrw.de/geobasis/wms_nw_dgm-schummerung
 - Geobasis NRW, dl-de/zero-2-0: https://www.govdata.de/dl-de/zero-2-0
 - Product: https://www.bezreg-koeln.nrw.de/geobasis-nrw/produkte-und-dienste/hoehenmodelle/digitale-gelaendemodelle/gelaendeschummerung
 - RLP 1 m hillshade: https://geo4.service24.rlp.de/wms/shade1m.fcgi
@@ -71,3 +70,17 @@ A public repository does not grant permission to overload providers, remove cred
 - Metadata: https://www.geoportal.rlp.de/mapbender/php/mod_showMetadata.php?id=49357&layout=tabs&resource=layer
 - Source conditions: https://lvermgeo.rlp.de/geodaten-geoshop/open-data
 Changes in display: reprojection, clipping, scaling and opacity only; source datasets are not edited. Providers receive requests and IP/browser details when their layer is selected. No prefetching or bulk downloads. See in-app provider privacy links.
+
+## Combined imagery and source selection
+Automatic terrain overlays the connected finer regional sources on the German overview. Only visible-area services are attached. Transparency exposes lower sources; pane opacity affects the composite once. This is a display combination, not a transfer of dataset ownership.
+NRW aerial: https://www.wms.nrw.de/geobasis/wms_nw_dop , layer nw_dop_rgb, 10 cm; Geobasis NRW, dl-de/zero-2-0. Provider terms: https://www.bezreg-koeln.nrw.de/system/files/media/document/file/lizenzbedingungen_geobasis_nrw.pdf
+RLP aerial: https://geo4.service24.rlp.de/wms/rp_dop20.fcgi , layer rp_dop20, 20 cm; ©GeoBasis-DE / LVermGeoRP 2026, dl-de/by-2-0, https://www.lvermgeo.rlp.de [Daten bearbeitet]. Official source and reuse terms: https://lvermgeo.rlp.de/geodaten-geoshop/open-data
+
+## EOX satellite fallback — 2016 vintage only
+EOxCloudless https://cloudless.eox.at by EOX IT Services GmbH https://eox.at (Contains modified Copernicus Sentinel data 2016 & 2017). CC BY 4.0: https://creativecommons.org/licenses/by/4.0/
+Service: https://tiles.maps.eox.at/wmts/1.0.0/WMTSCapabilities.xml ; layer s2cloudless_3857, GoogleMapsCompatible. Native imagery is an approximately 10 m, older satellite mosaic; the viewer enlarges it at high zoom. It is not current aerial photography.
+The 2016 product's specific licence permits embedded public interactive viewing with attribution, including commercial embedded use. Later vintages are not used: their non-commercial restrictions do not apply to the selected 2016 layer. Licence and attribution: https://cloudless.eox.at/license-non-commercial ; service / fair-use guidance: https://cloudless.eox.at/documentation/faq ; https://maps.eox.at/ . No uptime guarantee, bulk use or standalone raw tile redistribution is assumed.
+The source provider receives IP/browser and tile requests only when satellite/aerial is selected and the viewed area intersects the viewer's coverage. Privacy: https://eox.at/privacy-notice/
+
+## Scope of the permission review
+See DATA_PERMISSIONS.md. Reviewed for this application's ordinary public interactive display, on 10 November 2026. This does not declare every source public domain, grant unlimited service traffic, or license raw data extraction under MIT. Operator-specific hosting disclosures remain the deployer's responsibility.
