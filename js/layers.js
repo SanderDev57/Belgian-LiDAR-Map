@@ -195,7 +195,7 @@ function pumpIgn() {
 for(const layer of [...terrainSources,...allBackgrounds].filter(l=>l.options.allowMissing)) {
  layer.createTile = function(coords,done) {
   const tile=document.createElement('img');tile.alt='';tile.setAttribute('role','presentation');
-  let controller,blobUrl=null,cancelled=false,timeout,task;
+  let controller,blobUrl=null,cancelled=false,timeout,task,attempt=0;
   const cleanup=()=>{
    clearTimeout(timeout);if(blobUrl){URL.revokeObjectURL(blobUrl);blobUrl=null;}
    if(task && !task.finished){task.finished=true;if(task.active)ignBusy--;pumpIgn();}
@@ -209,7 +209,8 @@ for(const layer of [...terrainSources,...allBackgrounds].filter(l=>l.options.all
   tile.retryFetch=()=>{
    task={cancelled:false,active:false,finished:false,start:()=>{
     controller=new AbortController();timeout=setTimeout(()=>controller.abort(),30000);
-    fetch(this.getTileUrl(coords),{signal:controller.signal,credentials:'omit'}).then(response=>{
+    const requestUrl=new URL(this.getTileUrl(coords));if(attempt++)requestUrl.searchParams.set('_retry','1');
+    fetch(requestUrl.href,{signal:controller.signal,credentials:'omit'}).then(response=>{
      if(response.status===404)return null;
      if(!response.ok)throw new Error('IGN service: '+response.status);
      return response.blob();
@@ -261,7 +262,8 @@ for(const layer of [...terrainSources,...allBackgrounds]) {
     retried = true;
     tile.retryTimer = setTimeout(() => {
      if(this._map && tile.isConnected) {
-      if(this.retryTile)this.retryTile(tile,coords);else tile.src=this.getTileUrl(coords);
+      if(this.retryTile)this.retryTile(tile,coords);
+      else {const url=new URL(this.getTileUrl(coords));url.searchParams.set('_retry','1');tile.src=url.href;}
      }
     },1500);
    } else {
