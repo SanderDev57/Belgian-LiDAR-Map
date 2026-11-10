@@ -100,3 +100,41 @@ All map sources now share a visible-tile scheduler: at most eight active request
 France HD and the newer AHN5/6 sources activate from zoom 12; French high-resolution fallback activates from zoom 11. Their broader connected terrain remains beneath them. Automatic selection still puts the finest connected available source on top at detail zooms. All national/regional backgrounds are geographically clipped, so opaque out-of-area pixels cannot hide neighbouring maps at overview zooms. Generalized edges can have narrow gaps and are not survey boundaries.
 
 Complete French basemaps, aerial and fallback terrain use ordinary image loading through the shared scheduler, avoiding a CORS requirement. Only progressively published LiDAR HD uses fetched tiles to distinguish missing coverage (404/204) from service failures.
+
+## Experimental Scan gebied
+
+Developed on local branch `feature/scan-gebied`. Open the map, scroll to **Scan
+gebied**, zoom to an area no larger than 600 × 600 m (minimum 30 × 30 m), then
+start the scan. Alternatively choose **Selecteer zone** and tap two opposite
+corners; this works with mouse or touch. Escape cancels zone selection.
+
+Numerical Mapterhorn Terrarium tiles are fetched only on explicit request, with
+at most two requests at once, up to 36 tiles and an eight-tile memory cache.
+Cancellation aborts pending fetches and cooperatively interrupts numerical loops.
+A failed/cancelled scan retains previous results. Partial/missing data fails the
+whole scan instead of reporting false completeness. There is no automatic retry
+storm. Rerun manually if a service is unavailable.
+
+Analysis samples heights on a 1 m grid with a 16 m context margin, subtracts a
+12 m local terrain mean after small-scale smoothing, thresholds local relief and
+labels connected components using elongation, sign, oriented rectangularity and
+ring-like occupancy. A near-linear hillside is removed by the symmetric local
+mean. Approximate footprint boxes and centres are marked; detections intersecting
+the scan boundary are excluded. Nested residual detections are suppressed. Up to
+150 candidates are shown, with type filters, evidence and per-result session-only
+feedback (correct/incorrect/uncertain). Feedback does not train a model.
+
+All six labels are **possible** terrain interpretations. Scores (35–80/100) rank
+heuristic shape/contrast evidence; they are not calibrated probabilities. No
+historical database, dating model or archaeologically validated classifier is
+included. Recent works, natural features, trees, interpolation and data seams can
+produce false positives. Flat/subtle structures can be missed. No detections is
+not evidence of absence. The raster sample step does not increase native source
+resolution: Belgium includes 0.5–1 m LiDAR models; other source footprints can be
+coarser (including Netherlands' listed AHN5 5 m) and may use non-LiDAR fallback.
+The scan source is independent of the selected display layer and its vintage.
+
+Tests: `node --test tests/*.test.cjs`. Build both the hosted and standalone version
+with `node build.mjs`. See `tests/scan.test.cjs` for numerical fixtures and
+`tests/scan-data.test.cjs` / `tests/scan-ui.test.cjs` for bounded fetching and UI
+lifecycle coverage. Browser/device validation is separate from these tests.

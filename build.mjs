@@ -10,7 +10,7 @@ for(const image of ['layers.png','layers-2x.png','marker-icon.png','marker-icon-
 html = html.replace('<link rel="stylesheet" href="vendor/leaflet/leaflet.css">',() => '<style>\n'+leafletCss+'\n</style>');
 const stylesheet = await read('css/styles.css');
 html = html.replace('<link rel="stylesheet" href="css/styles.css">',() => '<style>\n'+stylesheet+'\n</style>');
-for(const file of ['vendor/leaflet/leaflet.js','js/map.js','js/coverage.js','js/tiles.js','js/layers.js','js/comparison.js','js/app.js']) {
+for(const file of ['vendor/leaflet/leaflet.js','js/map.js','js/coverage.js','js/tiles.js','js/layers.js','js/comparison.js','js/app.js','js/scan-core.js','js/scan-data.js','js/scan.js']) {
  const code = (await read(file)).replace(/\/\/# sourceMappingURL=[^\r\n]*/g,'');
  const scriptTag = new RegExp('<script src="'+file.replaceAll('.', '\\.')+'(?:\\?[^"]*)?"></script>');
  html = html.replace(scriptTag,() => '<script>\n'+code+'\n</script>');

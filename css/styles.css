@@ -8,3 +8,16 @@
 .divider.horizontal{right:0;bottom:auto;width:auto;height:42px;transform:translateY(-50%);cursor:ns-resize}
 .divider.horizontal:before{top:20px;bottom:auto;left:0;right:0;width:auto;height:3px}
 .divider.horizontal .knob{top:50%;left:55%}
+
+/* Scan controls stay in the existing scrollable mobile/desktop panel. */
+#scanSection{border-top:1px solid #43555d;margin-top:16px;padding-top:2px}
+.scan-actions{margin:9px 0}.scan-actions #scanStart{background:#285c50;font-weight:700}
+#scanProgress{width:100%;height:16px;margin-top:10px;accent-color:#75d3c2}
+.scan-warning{font-size:12px;line-height:1.5;border-left:3px solid #edc96c;padding:8px;background:#edc96c12}
+#scanFilters{border:1px solid #526b78;border-radius:9px;margin:12px 0;padding:8px;display:flex;flex-wrap:wrap;gap:8px}
+#scanFilters legend{font-size:12px}.scan-filter{display:flex;align-items:center;gap:5px;font-size:12px;min-height:30px}
+.scan-filter input{width:18px;height:18px;accent-color:#75d3c2}.scan-results{max-height:240px;overflow:auto}
+.scan-result{display:block;width:100%;text-align:left;margin-bottom:6px;border-left:5px solid;font-size:12px;min-height:44px}
+.scan-selecting{cursor:crosshair}.scan-popup{font:12px/1.5 system-ui,sans-serif;color:#182932}.scan-popup p{margin:9px 0}
+.scan-popup .row{flex-wrap:wrap}.scan-popup button{font-size:12px;padding:8px;min-height:42px}
+button[aria-pressed=true]{outline:2px solid #75d3c2;outline-offset:1px}button:disabled{opacity:.5;cursor:wait}

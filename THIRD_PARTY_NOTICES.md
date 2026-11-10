@@ -124,3 +124,33 @@ All map sources now share a visible-tile scheduler: at most eight active request
 France HD and the newer AHN5/6 sources activate from zoom 12; French high-resolution fallback activates from zoom 11. Their broader connected terrain remains beneath them. Automatic selection still puts the finest connected available source on top at detail zooms. All national/regional backgrounds are geographically clipped, so opaque out-of-area pixels cannot hide neighbouring maps at overview zooms. Generalized edges can have narrow gaps and are not survey boundaries.
 
 Complete French basemaps, aerial and fallback terrain use ordinary image loading through the shared scheduler, avoiding a CORS requirement. Only progressively published LiDAR HD uses fetched tiles to distinguish missing coverage (404/204) from service failures.
+
+## On-demand numerical terrain scans · Mapterhorn
+
+`Scan gebied` retrieves Terrarium-encoded 512 px WebP numerical elevation tiles
+from `https://tiles.mapterhorn.com/{z}/{x}/{y}.webp`, at zoom 17. These are elevation
+values, not interpreted hillshade colours. The single-tile endpoint is explicitly
+published at https://mapterhorn.com/data-access/ . The viewer requests only the
+chosen area plus a 16 m analysis margin: maximum 600 × 600 m, 36 tiles, two concurrent
+requests, a 20 second request timeout and eight decoded tiles in memory. No bulk
+extraction, background scan, persistent tile store or offline pack is added.
+
+Retain the scan attribution linking to https://mapterhorn.com/attribution/ .
+Underlying datasets keep their own licences, not the application's MIT licence.
+The provider's full source/producer/licence list is available at
+https://download.mapterhorn.com/attribution.json . Checked 2026-11-10, including:
+
+- **Digitaal Hoogtemodel Vlaanderen II, DTM, raster, 1 m**, agentschap Digitaal
+  Vlaanderen: Model license for free reuse (source `beflanders`).
+- **Relief de la Wallonie - MNT 2021–2022**, Service public de Wallonie (SPW):
+  CC BY 4.0, 0.5 m (source `bewallonie`).
+- **LiDAR 2019 MNT**, Administration du cadastre et de la topographie Luxembourg:
+  CC0, 0.5 m (source `lu`). This is independent of the viewer's newer imagery layer.
+- Netherlands' listed **AHN5 5 m**, AHN.nl: CC BY 4.0
+  (`nlahn5lowresfilled`). Other countries and source footprints can use coarser
+  fallback data. Displayed terrain tiles and scan data are separate sources.
+
+The provider receives request/IP details and tile coordinates only when the user
+starts a scan. User feedback is kept in memory in the current page session only;
+it is not transmitted or used to train a model. Candidate output is an unvalidated
+morphological hypothesis, not evidence of archaeological identity, age or absence.

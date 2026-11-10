@@ -78,7 +78,7 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 </pre></details>
-<p>Only ordinary interactive viewing is provided: no bulk requests, offline map packs or prefetching. Public services can limit access or change. The website operator remains responsible for hosting-specific privacy and contact information.
+<p>On request, Scan gebied retrieves a bounded area of numerical terrain tiles from <a href="https://mapterhorn.com/attribution/">Mapterhorn</a> for local, experimental morphology analysis. This sends the scan tile coordinates and IP/browser details to that provider. Scores are unvalidated shape evidence, not archaeological probabilities. No feedback is transmitted.</p><p>Only ordinary interactive viewing and bounded on-demand scans are provided: no bulk requests, offline map packs or prefetching. Public services can limit access or change. The website operator remains responsible for hosting-specific privacy and contact information.
 </p><p>The original viewer code is MIT licensed. This does not license the map datasets, provider services or third-party software under MIT.</p>
 </details><button id="startMap" type="button">Open map</button><noscript><p>Enable JavaScript to use this viewer.</p></noscript></div></section>
 <div id="map" inert>
@@ -139,6 +139,21 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 <h3>LiDAR opacity · <span id="opacityValue">100%</span>
 </h3>
 <input id="opacity" type="range" min="0" max="100" value="100">
+<section id="scanSection" aria-labelledby="scanTitle">
+<h3 id="scanTitle">Scan gebied · experimenteel</h3>
+<p class="muted">Zoek mogelijke loopgraven, kraters, grafheuvels, omwallingen, verdwenen gebouwen en oude wegen in numerieke terreinwaarden.</p>
+<label for="scanScope">Te analyseren gebied</label>
+<select id="scanScope" class="field"><option value="visible">Zichtbaar kaartgebied</option><option value="selection">Zelf geselecteerde zone</option></select>
+<div class="choices scan-actions"><button id="scanSelect" type="button" aria-pressed="false">Selecteer zone</button><button id="scanStart" type="button">Scan gebied</button></div>
+<button id="scanCancel" type="button" hidden>Annuleren</button>
+<progress id="scanProgress" max="100" value="0" aria-label="Voortgang gebiedsscan" hidden></progress>
+<p id="scanStatus" class="status" role="status" aria-live="polite">Start uitsluitend op verzoek. Maximaal 600 × 600 m; zoom in voor kleine structuren.</p>
+<p class="scan-warning">Resultaten zijn vermoedens op basis van terreinvormen, geen bevestigde vondsten of dateringen. De score meet vormovereenkomst en is geen statistische vindkans.</p>
+<details><summary>Bron en beperkingen</summary><p class="muted">De scan leest numerieke Mapterhorn-terreinwaarden (Terrarium), onafhankelijk van de zichtbare LiDAR-laag. De bron bundelt onder meer Vlaamse (1 m) en Waalse (0,5 m) LiDAR-terreinmodellen. In andere gebieden kan de bron grover zijn of uit een ander hoogtemodel komen; de bronlijst vermeldt voor Nederland onder meer AHN5 van 5 m. Een rasterstap van 1 m voegt geen brondetail toe. Kleine of vlakke structuren kunnen ontbreken; natuur, recente werken en perceelsranden geven foutpositieven. Er is geen getraind of archeologisch gevalideerd model. De indicatieve score is begrensd op 80/100.</p><p class="muted">Alleen na Scan gebied worden hoogtetegels opgevraagd bij tiles.mapterhorn.com; de aanbieder ontvangt je IP-adres en het scangebied. Maximaal twee gelijktijdige verzoeken, geen achtergrondscans. Beoordelingen blijven alleen tijdens deze paginasessie bewaard en worden niet verstuurd.</p><a href="https://mapterhorn.com/attribution/" target="_blank" rel="noopener noreferrer">Mapterhorn · bronnen en licenties</a></details>
+<fieldset id="scanFilters"><legend>Filter vermoedelijk type</legend></fieldset>
+<p id="scanCount" class="muted"></p><div id="scanResults" class="scan-results"></div>
+<button id="scanClear" type="button">Wis resultaten en selectie</button>
+</section>
 <h3>Service status</h3>
 <div id="status" class="status">LiDAR disabled. Choose a terrain layer.</div>
 <div id="backgroundStatus" class="status" role="status"></div>
@@ -158,5 +173,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 <script src="js/layers.js?v=global-1"></script>
 <script src="js/comparison.js"></script>
 <script src="js/app.js?v=global-1"></script>
+<script src="js/scan-core.js"></script>
+<script src="js/scan-data.js"></script>
+<script src="js/scan.js"></script>
 </body>
 </html>
