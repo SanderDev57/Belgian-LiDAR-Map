@@ -40,14 +40,16 @@ $('opacity').oninput = () => {
  $('opacityValue').textContent = value+'%'; app.setOpacity(value);
 };
 $('ardennes').onclick = () => map.setView([50.21908,5.61689],17);
-function visitGermany(center, zoom) {
+function visitCoverage(center, zoom) {
  $('terrain').value = 'auto';
  $('background').value = 'satellite';
  // Navigate before adding the new services to avoid a discarded request batch.
  map.setView(center,zoom,{animate:false}); app.setBase(); app.chooseTerrain();
 }
-$('eifel').onclick = () => visitGermany([50.581,6.397],15);
-$('germany').onclick = () => visitGermany([51.16,10.45],6);
+$('eifel').onclick = () => visitCoverage([50.581,6.397],15);
+$('netherlands').onclick = () => visitCoverage([52.101,5.927],16);
+$('france').onclick = () => visitCoverage([49.77,4.72],16);
+$('germany').onclick = () => visitCoverage([51.16,10.45],6);
 $('belgium').onclick = () => map.fitBounds([[49.5,2.6],[51.5,6.35]]);
 map.on('click',e => {$('selected').textContent = 'Selected: '+e.latlng.lat.toFixed(6)+', '+e.latlng.lng.toFixed(6);});
 let searching = false;
@@ -66,7 +68,7 @@ async function go() {
  const controller = new AbortController();
  const timeout = setTimeout(() => controller.abort(),12000);
  try {
-  const query = new URLSearchParams({q:value,limit:'1',bbox:'2.5,47.2,15.1,55.1'});
+  const query = new URLSearchParams({q:value,limit:'1',bbox:'-5.2,41.3,15.5,55.8'});
   const response = await fetch('https://photon.komoot.io/api/?'+query,{signal:controller.signal,credentials:'omit'});
   if(!response.ok) throw new Error('Search request failed');
   const data = await response.json(), result = data.features?.[0];
