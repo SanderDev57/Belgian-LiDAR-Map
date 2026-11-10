@@ -8,11 +8,12 @@
 <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
-<section id="privacyGate" class="privacy-gate" aria-labelledby="privacyTitle"><div class="privacy-card"><h1 id="privacyTitle">Belgian LiDAR Map</h1><p>Explore Belgian, German, Dutch and French terrain with automatic detail and satellite / aerial comparison.</p><p>Opening the map loads street maps from OpenStreetMap Belgium / Champs-Libres and, where visible, BKG, PDOK or IGN. Enabling terrain or aerial imagery automatically contacts the sources covering the viewed area: Digitaal Vlaanderen, SPW, BKG, Geobasis NRW, LVermGeo Rheinland-Pfalz, AHN via Ellipsis Drive, PDOK, IGN / Géoplateforme and EOX. These providers receive your IP address and the area you view. Place and address searches connect to Photon / komoot when submitted.</p><details><summary>Provider privacy information</summary><p>This viewer requests maps directly from the providers you choose. They receive your IP address, browser/request information and tile coordinates, which reveal the area being viewed. Place and address searches are sent to Photon / komoot only when you press Search or Enter. This service receives your search text, IP address and browser/request information. Coordinate input is processed locally. The application adds no analytics, cookies or browser storage; the current map position is kept in the URL fragment and can be included when you share the link.</p>
+<section id="privacyGate" class="privacy-gate" aria-labelledby="privacyTitle"><div class="privacy-card"><h1 id="privacyTitle">Belgian LiDAR Map</h1><p>Explore Belgian, German, Dutch, French and Luxembourg terrain with automatic detail and satellite / aerial comparison.</p><p>Opening the map loads street maps from OpenStreetMap Belgium / Champs-Libres and, where visible, BKG, PDOK, IGN or Luxembourg ACT. Enabling terrain or aerial imagery automatically contacts the sources covering the viewed area: Digitaal Vlaanderen, SPW, BKG, Geobasis NRW, LVermGeo Rheinland-Pfalz, AHN via Ellipsis Drive, PDOK, IGN / Géoplateforme, Luxembourg ACT / Geoportail.lu and EOX. These providers receive your IP address and the area you view. Place and address searches connect to Photon / komoot when submitted.</p><details><summary>Provider privacy information</summary><p>This viewer requests maps directly from the providers you choose. They receive your IP address, browser/request information and tile coordinates, which reveal the area being viewed. Place and address searches are sent to Photon / komoot only when you press Search or Enter. This service receives your search text, IP address and browser/request information. Coordinate input is processed locally. The application adds no analytics, cookies or browser storage; the current map position is kept in the URL fragment and can be included when you share the link.</p>
 <p><strong>Digitaal Vlaanderen:</strong> the agency processes request logs and IP addresses to secure its geographic services as a task in the public interest. IP addresses are retained for at most 90 days and are accessible to service administrators. You may request access, correction, erasure, restriction or object to processing; objecting may prevent service access. Contact <a href="mailto:privacy@digitaal.vlaanderen.be">privacy@digitaal.vlaanderen.be</a>. See its <a href="https://www.vlaanderen.be/digitaal-vlaanderen/onze-diensten-en-platformen/geografische-webdiensten/gebruiksrecht-en-privacyverklaring-geografische-webdiensten" target="_blank" rel="noopener">full service privacy notice, controller details and complaint information</a>.</p>
 <p><strong>German services:</strong> automatic terrain, street maps and aerial imagery send relevant map requests directly to BKG, Geobasis NRW or LVermGeo Rheinland-Pfalz. See <a href="https://www.bkg.bund.de/DE/Service/Datenschutz/datenschutz.html">BKG privacy</a>, <a href="https://www.bezreg-koeln.nrw.de/datenschutz">Bezirksregierung Köln privacy</a> and <a href="https://lvermgeo.rlp.de/datenschutz">LVermGeoRP privacy</a>.</p>
 <p><strong>Netherlands:</strong> AHN terrain requests go to Ellipsis Drive; aerial and street requests go to PDOK. These services receive your IP/browser information and viewed tiles. See <a href="https://ellipsis-drive.com/privacy/">Ellipsis Drive privacy</a> and <a href="https://www.pdok.nl/privacy">PDOK privacy</a>.</p>
 <p><strong>France:</strong> map, imagery and terrain requests go to IGN / Géoplateforme. See <a href="https://cartes.gouv.fr/donnees-personnelles/">cartes.gouv.fr privacy</a> and <a href="https://www.ign.fr/institut/donnees-caractere-personnel">IGN personal-data information</a>.</p>
+<p><strong>Luxembourg:</strong> terrain requests go to the public ACT WMS, and aerial/basemap requests go to the ACT open-data WMTS. They receive your IP/browser information and viewed tiles. <a href="https://www.geoportail.lu/en/about-us/terms-conditions/">ACT / Geoportail.lu terms and privacy information</a>.</p>
 <p><strong>EOX:</strong> satellite overview requests go to EOX IT Services GmbH, which receives your IP/browser information and viewed tiles. <a href="https://eox.at/privacy-notice/">EOX privacy</a>. The overview is the CC BY 4.0 2016 layer (2016–17 imagery), not current aerial photography.</p>
 <p><strong>SPW:</strong> consult the <a href="https://geoportail.wallonie.be/vie-privee.html" target="_blank" rel="noopener">SPW privacy notice</a>; privacy contact: <a href="mailto:dpo@spw.wallonie.be">dpo@spw.wallonie.be</a>.</p>
 <p><strong>OpenStreetMap Belgium / Champs-Libres:</strong> street-map requests go to their tile server. See the <a href="https://github.com/osmbe/openstreetmap-carto-be/wiki/Tile-Usage-Policy" target="_blank" rel="noopener">service and attribution policy</a> and <a href="https://www.champs-libres.coop/" target="_blank" rel="noopener">tile provider</a>.</p>
@@ -27,7 +28,7 @@
 <div>🗺️</div>
 <div>
 <strong>Belgian LiDAR Map</strong>
-<small>Belgium · Germany · Netherlands · France</small>
+<small>Belgium · Germany · Netherlands · France · Luxembourg</small>
 </div>
 <button id="menu" aria-label="Toggle menu">☰</button>
 </div>
@@ -45,14 +46,15 @@
 <button id="germany">Germany</button>
 <button id="netherlands">Netherlands</button>
 <button id="france">France</button>
+<button id="luxembourg">Luxembourg</button>
 </div>
-<p class="muted">Search area: <strong id="searchArea">Belgium / Germany / Netherlands / France</strong>. Search data: <a href="https://www.openstreetmap.org/copyright">© OpenStreetMap contributors</a> · <a href="https://github.com/komoot/photon">Photon / komoot</a>. <a href="https://www.komoot.com/privacy">Search provider privacy</a>.</p>
+<p class="muted">Search area: <strong id="searchArea">Belgium / Germany / Netherlands / France / Luxembourg</strong>. Search data: <a href="https://www.openstreetmap.org/copyright">© OpenStreetMap contributors</a> · <a href="https://github.com/komoot/photon">Photon / komoot</a>. <a href="https://www.komoot.com/privacy">Search provider privacy</a>.</p>
 <h3>Terrain layer</h3>
 <select class="field" id="terrain">
 <option value="auto">Automatic · finest connected detail</option>
 <option value="off" selected>No LiDAR</option>
 </select>
-<p class="muted" id="terrainHint">Finest connected terrain wins automatically: 25 cm in Flanders / NRW; 50 cm in Wallonia, AHN Netherlands and published French LiDAR HD areas. Broader terrain fills gaps. AHN6/5 overlay AHN4 where available; French HD coverage is still being published.</p>
+<p class="muted" id="terrainHint">Finest connected terrain wins automatically: 25 cm in Flanders / NRW; 50 cm in Wallonia, AHN Netherlands Luxembourg (LiDAR 2024) and published French LiDAR HD areas. Newer AHN and French HD load from zoom 12; French high-resolution fallback from zoom 11. Broader terrain fills gaps. AHN6/5 overlay AHN4 where available; French HD coverage is still being published.</p>
 <h3>Compare</h3>
 <label class="choice">
 <input type="checkbox" id="compare" checked>
@@ -69,13 +71,14 @@
 <option value="osm" selected>Street map · automatic coverage</option>
 <option value="none">No background</option>
 </select>
-<p class="muted" id="backgroundHint">Street maps for Belgium, Germany, Netherlands and metropolitan France.</p>
+<p class="muted" id="backgroundHint">Street maps for Belgium, Germany, Netherlands, metropolitan France and Luxembourg.</p>
 <h3>LiDAR opacity · <span id="opacityValue">100%</span>
 </h3>
 <input id="opacity" type="range" min="0" max="100" value="100">
 <h3>Service status</h3>
 <div id="status" class="status">LiDAR disabled. Choose a terrain layer.</div>
 <div id="backgroundStatus" class="status" role="status"></div>
+<button id="retryTiles" type="button" hidden>Retry failed tiles</button>
 <p class="muted" id="selected">Tap map for coordinates.</p>
 <div class="footer">Online connection required. Zooming past native detail does not add resolution.
 <details class="sources"><summary>Sources, licences &amp; privacy</summary>
@@ -92,6 +95,7 @@
 <li>Netherlands terrain: <a href="https://www.ahn.nl/dataroom">Actueel Hoogtebestand Nederland (AHN)</a>, 0.5 m ground model, AHN4 (CC0), AHN5/6 (<a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>), public services published through Ellipsis Drive. Newer available pixels overlay older coverage. The viewer requests a modified hillshade rendering; real no-data gaps remain.</li>
 <li>Netherlands aerial imagery: <a href="https://www.pdok.nl/-/hoge-resolutie-luchtfoto-2026-nu-beschikbaar-bij-pdok">Samenwerkingsverband Beeldmateriaal / PDOK, current high-resolution mosaic</a>, 2026 release, 5–8 cm; <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>. Street map: <a href="https://www.kadaster.nl/zakelijk/producten/geo-informatie/brt-achtergrondkaart">Kadaster / PDOK BRT Achtergrondkaart</a>, CC BY 4.0. <a href="https://www.pdok.nl/copyright">PDOK conditions</a>.</li>
 <li>Metropolitan France and Corsica: © IGN / Géoplateforme, <a href="https://www.data.gouv.fr/datasets/mnt-lidar-hd">LiDAR HD MNT 50 cm</a>, with <a href="https://www.data.gouv.fr/datasets/rge-alti-r">RGE ALTI / broader terrain</a> underneath; <a href="https://www.data.gouv.fr/datasets/bd-ortho-r">BD ORTHO</a> aerial imagery (typically 20 cm) and <a href="https://www.data.gouv.fr/datasets/plan-ign">Plan IGN</a>. <a href="https://www.etalab.gouv.fr/licence-ouverte-open-licence/">Licence Ouverte / Open Licence 2.0</a>. Sources consulted 10 November 2026; capture/update dates vary by area and are given in the linked source metadata. HD coverage is being published progressively; some protected areas and no-data gaps are absent. <a href="https://cartes.gouv.fr/cgu/">Service terms</a>.</li>
+<li>Luxembourg: Administration du cadastre et de la topographie (ACT) / Geoportail.lu, <a href="https://data.public.lu/fr/datasets/lidar-2024-releve-3d-du-territoire-luxembourgeois/">LiDAR 2024 MNT hillshade (50 cm source model)</a>, <a href="https://data.public.lu/fr/datasets/bd-l-ortho-webservices-wms-et-wmts/">2025 summer aerial imagery</a> and <a href="https://data.public.lu/fr/datasets/carte-de-base-webservices-wms-et-wmts/">Carte de base</a>, <a href="https://creativecommons.org/publicdomain/zero/1.0/">CC0</a>. Public WMS/WMTS; source rendering and generalised country-edge masks are retained. This does not claim access to restricted layers.</li>
 <li>Country/region display masks: <a href="https://www.naturalearthdata.com/about/terms-of-use/">Natural Earth, public domain</a>, generalized 1:10 million boundaries. Used to clip Dutch/French imagery and street maps; narrow edge gaps are possible. These are not survey boundaries.</li>
 <li>Satellite fallback: <a href="https://cloudless.eox.at">EOxCloudless</a> by <a href="https://eox.at">EOX IT Services GmbH</a> (Contains modified Copernicus Sentinel data 2016 &amp; 2017), <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>. <a href="https://cloudless.eox.at/license-non-commercial">Product licence and attribution</a>. Only the 2016 vintage is used; later vintages have different conditions. This older overview fills gaps outside the connected detailed aerial services.</li>
 <li>Street map: © <a href="https://www.openstreetmap.org/copyright">OpenStreetMap contributors</a> (ODbL data), tiles generated by <a href="https://www.champs-libres.coop/">Champs-Libres</a>, under the <a href="https://github.com/osmbe/openstreetmap-carto-be/wiki/Tile-Usage-Policy">Belgian tile-service policy</a>.</li>
@@ -103,6 +107,7 @@
 <p><strong>German services:</strong> automatic terrain, street maps and aerial imagery send relevant map requests directly to BKG, Geobasis NRW or LVermGeo Rheinland-Pfalz. See <a href="https://www.bkg.bund.de/DE/Service/Datenschutz/datenschutz.html">BKG privacy</a>, <a href="https://www.bezreg-koeln.nrw.de/datenschutz">Bezirksregierung Köln privacy</a> and <a href="https://lvermgeo.rlp.de/datenschutz">LVermGeoRP privacy</a>.</p>
 <p><strong>Netherlands:</strong> AHN terrain requests go to Ellipsis Drive; aerial and street requests go to PDOK. These services receive your IP/browser information and viewed tiles. See <a href="https://ellipsis-drive.com/privacy/">Ellipsis Drive privacy</a> and <a href="https://www.pdok.nl/privacy">PDOK privacy</a>.</p>
 <p><strong>France:</strong> map, imagery and terrain requests go to IGN / Géoplateforme. See <a href="https://cartes.gouv.fr/donnees-personnelles/">cartes.gouv.fr privacy</a> and <a href="https://www.ign.fr/institut/donnees-caractere-personnel">IGN personal-data information</a>.</p>
+<p><strong>Luxembourg:</strong> terrain requests go to the public ACT WMS, and aerial/basemap requests go to the ACT open-data WMTS. They receive your IP/browser information and viewed tiles. <a href="https://www.geoportail.lu/en/about-us/terms-conditions/">ACT / Geoportail.lu terms and privacy information</a>.</p>
 <p><strong>EOX:</strong> satellite overview requests go to EOX IT Services GmbH, which receives your IP/browser information and viewed tiles. <a href="https://eox.at/privacy-notice/">EOX privacy</a>. The overview is the CC BY 4.0 2016 layer (2016–17 imagery), not current aerial photography.</p>
 <p><strong>SPW:</strong> consult the <a href="https://geoportail.wallonie.be/vie-privee.html" target="_blank" rel="noopener">SPW privacy notice</a>; privacy contact: <a href="mailto:dpo@spw.wallonie.be">dpo@spw.wallonie.be</a>.</p>
 <p><strong>OpenStreetMap Belgium / Champs-Libres:</strong> street-map requests go to their tile server. See the <a href="https://github.com/osmbe/openstreetmap-carto-be/wiki/Tile-Usage-Policy" target="_blank" rel="noopener">service and attribution policy</a> and <a href="https://www.champs-libres.coop/" target="_blank" rel="noopener">tile provider</a>.</p>
@@ -144,9 +149,10 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 </div>
 <script src="vendor/leaflet/leaflet.js"></script>
 <script src="js/map.js"></script>
-<script src="js/coverage.js?v=nlfr-6"></script>
-<script src="js/layers.js?v=nlfr-6"></script>
+<script src="js/coverage.js?v=lux-2"></script>
+<script src="js/tiles.js?v=lux-2"></script>
+<script src="js/layers.js?v=lux-2"></script>
 <script src="js/comparison.js"></script>
-<script src="js/app.js?v=nlfr-6"></script>
+<script src="js/app.js?v=lux-2"></script>
 </body>
 </html>

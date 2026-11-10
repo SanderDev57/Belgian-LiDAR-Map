@@ -15,18 +15,30 @@ const belgiumBounds = [[49.49,2.53],[51.52,6.5]];
 const combinedBounds = [[41.3,-5.2],[55.8,15.5]];
 const nlBounds = [[50.7,3.3],[53.65,7.25]];
 const frBounds = [[41.3,-5.2],[51.15,9.65]];
+const luBounds=[[49.438,5.72],[50.185,6.5462]];
+const luCredit='© <a href="https://act.public.lu">Administration du cadastre et de la topographie (ACT)</a> / <a href="https://geoportail.lu">Geoportail.lu</a> · <a href="https://creativecommons.org/publicdomain/zero/1.0/">CC0</a>';
+// Cached public Luxembourg basemap and 2025 summer orthophoto. Matrix identifiers
+// are zero-padded below z10, as advertised by the service capabilities.
+const LuTile=L.TileLayer.extend({getTileUrl(coords){
+ return this._url.replace('{z}',String(coords.z).padStart(2,'0')).replace('{x}',coords.x).replace('{y}',coords.y);
+}});
+function luTile(name,matrix,maxNativeZoom,zIndex,format='png') {
+ return new LuTile('https://wmts1.geoportail.lu/opendata/wmts/'+name+'/'+matrix+'/{z}/{x}/{y}.'+format,{
+  ...common,pane:'backgroundPane',bounds:luBounds,noWrap:true,maxNativeZoom,zIndex,attribution:luCredit,coverageCountry:'LU',clipCountry:'LU'
+ });
+}
 const ahnCredit = 'Bron: <a href="https://www.ahn.nl/dataroom">AHN</a> · <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0 (AHN5/6)</a>; AHN4 CC0 · hillshade via Ellipsis Drive';
 const nlPhotoCredit = '© <a href="https://www.beeldmateriaal.nl">Samenwerkingsverband Beeldmateriaal</a> / PDOK · <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>';
 const frCredit = '© <a href="https://cartes.gouv.fr">IGN / Géoplateforme</a> · <a href="https://www.etalab.gouv.fr/licence-ouverte-open-licence/">Licence Ouverte 2.0</a> · source dates vary';
 function ignTile(layer,matrix,maxNativeZoom,zIndex,pane='terrainPane',format='image/png',style='normal',minZoom=0) {
  return L.tileLayer('https://data.geopf.fr/wmts?SERVICE=WMTS&VERSION=1.0.0&REQUEST=GetTile&LAYER='+layer+'&STYLE='+style+'&FORMAT='+encodeURIComponent(format)+'&TILEMATRIXSET='+matrix+'&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}',{
-  ...common,pane,bounds:frBounds,noWrap:true,maxNativeZoom,minZoom,zIndex,attribution:frCredit,coverageCountry:'FR',allowMissing:layer.includes('LIDAR-HD_MNT')
+  ...common,pane,bounds:frBounds,noWrap:true,maxNativeZoom,minZoom,zIndex,attribution:frCredit,coverageCountry:'FR',allowMissing:true
  });
 }
 const ahnStyle = {"method":"v2","parameters":{"fill":{"type":"channelMap","channelMap":[{"expression":"255","channel":"red"},{"expression":"255","channel":"green"},{"expression":"255","channel":"blue"}]},"shade":{"bandNumber":1,"exaggerate":1,"azimuth":315,"angle":45,"factor":1},"alphaMultiplier":1}};
 function ahn(path,timestamp,zIndex,bounds=nlBounds) {
  return L.tileLayer('https://api.ellipsis-drive.com/v3/path/'+path+'/raster/timestamp/'+timestamp+'/tile/{z}/{x}/{y}?style='+encodeURIComponent(JSON.stringify(ahnStyle)),{
-  ...common,pane:'terrainPane',bounds,noWrap:true,maxNativeZoom:18,zIndex,attribution:ahnCredit,coverageCountry:'NL',paced:true
+  ...common,pane:'terrainPane',bounds,noWrap:true,minZoom:zIndex>33?12:0,maxNativeZoom:18,zIndex,attribution:ahnCredit,coverageCountry:'NL',paced:true
  });
 }
 function wms(url,layers,attribution,bounds,maxNativeZoom,pane,zIndex,coverageCountry='DE') {
@@ -62,11 +74,14 @@ const aerialWa = spw('IMAGERIE/ORTHO_2023_ETE',{
 function fl(name) {
  return L.tileLayer('https://geo.api.vlaanderen.be/DHMV/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER='+name+'&STYLE=&FORMAT=image/png&TILEMATRIXSET=GoogleMapsVL&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}',{...common,coverageCountry:'FL',zIndex:40,pane:'terrainPane',maxNativeZoom:21,attribution:flCredit,bounds:[[50.68,2.53],[51.52,5.95]]});
 }
+const terrainLu=wms('https://wms.geoportail.lu/public_map_layers/service','2978',luCredit+' · LiDAR 2024 MNT',luBounds,18,'terrainPane',36,'LU');
+terrainLu.options.clipCountry='LU';
 const terrainSources = [
+ terrainLu,
  // Fine sources cover coarser ones; transparent edges and missing tiles reveal the fallback.
  ignTile('ELEVATION.ELEVATIONGRIDCOVERAGE.SHADOW','PM_0_15',15,5,'terrainPane','image/png','estompage_grayscale'),
- ignTile('IGNF_ELEVATION.ELEVATIONGRIDCOVERAGE.SHADOW','PM_6_17',17,15,'terrainPane','image/png','normal',6),
- ignTile('IGNF_LIDAR-HD_MNT_ELEVATION.ELEVATIONGRIDCOVERAGE.SHADOW','PM_0_18',18,32),
+ ignTile('IGNF_ELEVATION.ELEVATIONGRIDCOVERAGE.SHADOW','PM_6_17',17,15,'terrainPane','image/png','normal',11),
+ ignTile('IGNF_LIDAR-HD_MNT_ELEVATION.ELEVATIONGRIDCOVERAGE.SHADOW','PM_0_18',18,32,'terrainPane','image/png','normal',12),
  ahn('8b60a159-42ed-480c-ba86-7f181dcf4b8a','54e1e21c-50fe-42a4-b9fb-1f25ccb199af',33),
  ahn('51e11c02-1065-463d-a0b0-263d80293b16','41eaf86f-fa84-48f7-a949-355044ed0e4e',34,[[50.7,3.3],[53.65,6.445]]),
  ahn('231a4c66-9de9-4f41-91af-e4e991df9160','05df775a-ae39-4bb0-a52e-d3044c993d1e',35,[[51.8,3.94],[53.7,7.37]]),
@@ -100,11 +115,16 @@ const streetNl = L.tileLayer('https://service.pdok.nl/kadaster/brt-achtergrondka
  ...common,pane:'backgroundPane',zIndex:-1,bounds:nlBounds,noWrap:true,maxNativeZoom:19,
  attribution:'© <a href="https://www.kadaster.nl/zakelijk/producten/geo-informatie/brt-achtergrondkaart">Kadaster / PDOK</a> · <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>',coverageCountry:'NL',clipCountry:'NL'
 });
+const aerialLu=luTile('ortho_2025','GLOBAL_WEBMERCATOR_4_V3',20,60,'jpeg');
+const streetLu=luTile('basemap','GLOBAL_WEBMERCATOR',19,2);
 const backgroundSources = {
- satellite:[satelliteOverview,aerialFr,aerialRlp,aerialWa,aerialFl,aerialNrw,aerialNl],
- osm:[streetFr,streetNl,streetBe,streetDe]
+ satellite:[satelliteOverview,aerialFr,aerialRlp,aerialWa,aerialFl,aerialNrw,aerialNl,aerialLu],
+ osm:[streetFr,streetNl,streetBe,streetDe,streetLu]
 };
 const allBackgrounds = [...backgroundSources.satellite,...backgroundSources.osm];
+// National street tiles and some WMS images include opaque pixels beyond their
+// own territory. Clip their display as well as their request footprint.
+for(const layer of allBackgrounds) if(layer.options.coverageCountry) layer.options.clipCountry=layer.options.coverageCountry;
 // Bounds are only a first filter. Country geometry avoids requesting neighbours'
 // rectangular services in areas they do not cover, including individual border tiles.
 for(const layer of [...terrainSources,...allBackgrounds]) {
@@ -117,7 +137,16 @@ for(const layer of [...terrainSources,...allBackgrounds]) {
 }
 const baseGroup = L.layerGroup(), terrainGroup = L.layerGroup();
 let baseKey = '', terrainEnabled = false;
-const terrainFailures = new Set(), backgroundFailures = new Set();
+const terrainFailures = new Map(), backgroundFailures = new Map();
+const failedCount=(collection,group)=>group.getLayers().reduce((sum,l)=>sum+(collection.get(l)?.size||0),0);
+function retryVisibility() {$('retryTiles').hidden=!failedCount(terrainFailures,terrainGroup) && !failedCount(backgroundFailures,baseGroup);}
+function trackFailures(layer,collection,onChange) {
+ const failures=new Set();collection.set(layer,failures);
+ layer.on('tileerror',e=>{failures.add(e.tile);onChange();retryVisibility();});
+ layer.on('tileload tileunload tileabort',e=>{failures.delete(e.tile);onChange();retryVisibility();});
+ layer.on('loading load',onChange);
+}
+
 function visible(layer) {
  return map._loaded && map.getZoom() >= (layer.options.minZoom || 0)
   && (!layer.options.bounds || map.getBounds().intersects(L.latLngBounds(layer.options.bounds)))
@@ -134,13 +163,13 @@ function terrainStatus() {
  if(!terrainEnabled) return;
  const layers = terrainGroup.getLayers();
  if(!layers.length) {report('No connected terrain coverage here.'); return;}
- if(layers.some(layer => layer.isLoading())) {report('Loading terrain · finest detail appears as tiles arrive…'); return;}
- const failed = layers.some(layer => terrainFailures.has(layer));
+ if(layers.some(layer => layer.isLoading())) {report('Loading terrain · finer detail appears as tiles arrive…'); return;}
+ const failed = failedCount(terrainFailures,terrainGroup)>0;
  report(failed ? 'Some terrain sources failed; available layers remain visible.' : 'Terrain loaded · finest connected detail on top.',!failed);
 }
 function backgroundStatus() {
  const layers = baseGroup.getLayers();
- if(layers.some(layer => backgroundFailures.has(layer))) {
+ if(failedCount(backgroundFailures,baseGroup)>0) {
   $('backgroundStatus').textContent = 'Some background sources failed; available imagery remains visible.';
  } else if(layers.some(layer => layer.isLoading())) {
   $('backgroundStatus').textContent = 'Loading background…';
@@ -149,19 +178,19 @@ function backgroundStatus() {
 function refreshCoverage() {
  syncGroup(baseGroup,backgroundSources[baseKey] || []);
  syncGroup(terrainGroup,terrainEnabled ? terrainSources : []);
- terrainStatus(); backgroundStatus(); applyCoverageMasks();
+ terrainStatus(); backgroundStatus(); retryVisibility(); applyCoverageMasks();
  if(app.applySplit) app.applySplit();
 }
 app.setBase = () => {
  baseKey = $('background').value;
- backgroundFailures.clear(); refreshCoverage();
+ refreshCoverage();
  $('backgroundHint').textContent = baseKey === 'satellite'
-  ? 'Aerial imagery: Belgium, Netherlands (5–8 cm), France (about 20 cm), NRW (10 cm), RLP (20 cm). Capture dates vary. Gaps use the older 2016–17 satellite overview (~10 m). Country-edge masks are generalized.'
-  : baseKey === 'osm' ? 'Street maps for Belgium, Germany, Netherlands and metropolitan France.' : '';
+  ? 'Aerial imagery: Belgium, Netherlands (5–8 cm), France (about 20 cm), NRW (10 cm), RLP (20 cm), Luxembourg (2025 summer). Capture dates vary. Gaps use the older 2016–17 satellite overview (~10 m). Country-edge masks are generalized.'
+  : baseKey === 'osm' ? 'Street maps for Belgium, Germany, Netherlands, metropolitan France and Luxembourg.' : '';
 };
 app.chooseTerrain = () => {
  terrainEnabled = $('terrain').value !== 'off';
- terrainFailures.clear();
+ 
  app.setOpacity(Number($('opacity').value));
  refreshCoverage();
  if(!terrainEnabled) report('LiDAR disabled. Select automatic terrain to enable it.');
@@ -169,110 +198,22 @@ app.chooseTerrain = () => {
 app.getTerrains = () => terrainGroup.getLayers();
 // Set opacity once on the composite, avoiding darker overlaps from stacked translucent layers.
 app.setOpacity = value => {map.getPane('terrainPane').style.opacity = String(value/100);};
-for(const layer of terrainSources) {
- layer.on('loading',() => {terrainFailures.delete(layer); if(terrainGroup.hasLayer(layer)) terrainStatus();});
- layer.on('tileerror',() => {terrainFailures.add(layer); if(terrainGroup.hasLayer(layer)) terrainStatus();});
- layer.on('load',() => {if(terrainGroup.hasLayer(layer)) terrainStatus();});
-}
-for(const layer of allBackgrounds) {
- layer.on('loading',() => {backgroundFailures.delete(layer); if(baseGroup.hasLayer(layer)) backgroundStatus();});
- layer.on('tileerror',() => {backgroundFailures.add(layer); if(baseGroup.hasLayer(layer)) backgroundStatus();});
- layer.on('load',() => {if(baseGroup.hasLayer(layer)) backgroundStatus();});
-}
+for(const layer of terrainSources) trackFailures(layer,terrainFailures,()=>{if(terrainGroup.hasLayer(layer))terrainStatus();});
+for(const layer of allBackgrounds) trackFailures(layer,backgroundFailures,()=>{if(baseGroup.hasLayer(layer))backgroundStatus();});
+app.retryFailedTiles=()=>{
+ for(const [collection,group] of [[terrainFailures,terrainGroup],[backgroundFailures,baseGroup]]) {
+  for(const layer of group.getLayers()) for(const tile of [...(collection.get(layer)||[])]) {
+   if(tile.isConnected && tile.restartRequest){collection.get(layer).delete(tile);tile.restartRequest();}
+  }
+ }
+ retryVisibility();
+};
+$('retryTiles').onclick=app.retryFailedTiles;
+window.addEventListener('online',app.retryFailedTiles);
 function applyCoverageMasks() {
- for(const layer of baseGroup.getLayers()) app.coverage.applyMask(layer,map);
+ for(const layer of [...baseGroup.getLayers(),...terrainGroup.getLayers()]) app.coverage.applyMask(layer,map);
 }
 map.on('viewreset zoomend resize layeradd',applyCoverageMasks);
-// IGN publishes LiDAR HD progressively; a missing cached tile is no-data, not
-// a failed national layer. Fetch permits distinguishing 404 from actual outages.
-const ignQueue=[];let ignBusy=0;
-function pumpIgn() {
- while(ignBusy<6 && ignQueue.length) {
-  const task=ignQueue.shift();if(task.cancelled)continue;
-  ignBusy++;task.active=true;task.start();
- }
-}
-for(const layer of [...terrainSources,...allBackgrounds].filter(l=>l.options.allowMissing)) {
- layer.createTile = function(coords,done) {
-  const tile=document.createElement('img');tile.alt='';tile.setAttribute('role','presentation');
-  let controller,blobUrl=null,cancelled=false,timeout,task,attempt=0;
-  const cleanup=()=>{
-   clearTimeout(timeout);if(blobUrl){URL.revokeObjectURL(blobUrl);blobUrl=null;}
-   if(task && !task.finished){task.finished=true;if(task.active)ignBusy--;pumpIgn();}
-  };
-  tile.onload=()=>{cleanup();if(!cancelled)done(null,tile);};
-  tile.onerror=()=>{cleanup();if(!cancelled)done(new Error('IGN tile image failed'),tile);};
-  tile.cancelRequest=()=>{
-   cancelled=true;if(task){task.cancelled=true;const i=ignQueue.indexOf(task);if(i>=0)ignQueue.splice(i,1);}
-   if(controller)controller.abort();cleanup();
-  };
-  tile.retryFetch=()=>{
-   task={cancelled:false,active:false,finished:false,start:()=>{
-    controller=new AbortController();timeout=setTimeout(()=>controller.abort(),30000);
-    const requestUrl=new URL(this.getTileUrl(coords));if(attempt++)requestUrl.searchParams.set('_retry','1');
-    fetch(requestUrl.href,{signal:controller.signal,credentials:'omit'}).then(response=>{
-     if(response.status===404)return null;
-     if(!response.ok)throw new Error('IGN service: '+response.status);
-     return response.blob();
-    }).then(blob=>{
-     if(cancelled)return;
-     if(blob){blobUrl=URL.createObjectURL(blob);tile.src=blobUrl;}
-     else tile.src=L.Util.emptyImageUrl;
-    }).catch(error=>{cleanup();if(!cancelled)done(error,tile);});
-   }};
-   ignQueue.push(task);pumpIgn();
-  };
-  tile.retryFetch();return tile;
- };
- layer.retryTile=tile=>tile.retryFetch();
- layer.on('tileunload tileabort',e=>{if(e.tile.cancelRequest)e.tile.cancelRequest();});
-}
-// Share a modest queue across AHN generations: at most three active images and
-// eight starts/s. Panning removes stale queued and in-flight image requests.
-const ahnQueue=[];let ahnBusy=0,ahnNext=0,ahnTimer;
-function pumpAhn() {
- clearTimeout(ahnTimer);
- if(!ahnQueue.length || ahnBusy>=3)return;
- const delay=Math.max(0,ahnNext-Date.now());
- if(delay){ahnTimer=setTimeout(pumpAhn,delay);return;}
- const task=ahnQueue.shift();if(task.cancelled){pumpAhn();return;}
- ahnNext=Date.now()+125;ahnBusy++;task.active=true;
- task.start();pumpAhn();
-}
-for(const layer of terrainSources.filter(l=>l.options.paced)) {
- function enqueue(tile,url,done) {
-  const task={cancelled:false,active:false,finished:false,start(){tile.src=url;}};
-  function release(){if(task.finished)return;task.finished=true;if(task.active)ahnBusy--;pumpAhn();}
-  tile.onload=()=>{release();if(!task.cancelled)done(null,tile);};
-  tile.onerror=()=>{release();if(!task.cancelled)done(new Error('AHN tile failed'),tile);};
-  tile.cancelRequest=()=>{task.cancelled=true;const index=ahnQueue.indexOf(task);if(index>=0)ahnQueue.splice(index,1);release();tile.src=L.Util.emptyImageUrl;};
-  ahnQueue.push(task);pumpAhn();
- }
- layer.createTile=function(coords,done){const tile=document.createElement('img');tile.alt='';tile.setAttribute('role','presentation');tile.queueDone=done;enqueue(tile,this.getTileUrl(coords),done);return tile;};
- layer.retryTile=function(tile,coords){enqueue(tile,this.getTileUrl(coords),tile.queueDone);};
- layer.on('tileunload tileabort',e=>{if(e.tile.cancelRequest)e.tile.cancelRequest();});
-}
-// Retry each failed image at most once, cancelling delayed retries when tiles leave the view.
-for(const layer of [...terrainSources,...allBackgrounds]) {
- const createTile = layer.createTile;
- layer.createTile = function(coords,done) {
-  let retried = false;
-  return createTile.call(this,coords,(error,tile) => {
-   if(error && !retried) {
-    retried = true;
-    tile.retryTimer = setTimeout(() => {
-     if(this._map && tile.isConnected) {
-      if(this.retryTile)this.retryTile(tile,coords);
-      else {const url=new URL(this.getTileUrl(coords));url.searchParams.set('_retry','1');tile.src=url.href;}
-     }
-    },1500);
-   } else {
-    if(error)console.warn('Map tile failed after retry:',this.options.coverageCountry || 'overview',error.message);
-    done(error,tile);
-   }
-  });
- };
- layer.on('tileunload tileabort',e => clearTimeout(e.tile.retryTimer));
-}
+for(const layer of [...terrainSources,...allBackgrounds]) app.tiles.install(layer);
 map.on('moveend',refreshCoverage);
 })();

@@ -47,6 +47,7 @@ function visitCoverage(center, zoom) {
  map.setView(center,zoom,{animate:false}); app.setBase(); app.chooseTerrain();
 }
 $('eifel').onclick = () => visitCoverage([50.581,6.397],15);
+$('luxembourg').onclick = () => visitCoverage([49.755,6.1],16);
 $('netherlands').onclick = () => visitCoverage([52.101,5.927],16);
 $('france').onclick = () => visitCoverage([49.77,4.72],16);
 $('germany').onclick = () => visitCoverage([51.16,10.45],6);
