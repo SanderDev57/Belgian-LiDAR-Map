@@ -1116,26 +1116,45 @@ function applyCoverageMasks() {
 map.on('viewreset zoomend resize layeradd',applyCoverageMasks);
 // IGN publishes LiDAR HD progressively; a missing cached tile is no-data, not
 // a failed national layer. Fetch permits distinguishing 404 from actual outages.
+const ignQueue=[];let ignBusy=0;
+function pumpIgn() {
+ while(ignBusy<6 && ignQueue.length) {
+  const task=ignQueue.shift();if(task.cancelled)continue;
+  ignBusy++;task.active=true;task.start();
+ }
+}
 for(const layer of [...terrainSources,...allBackgrounds].filter(l=>l.options.allowMissing)) {
  layer.createTile = function(coords,done) {
   const tile=document.createElement('img');tile.alt='';tile.setAttribute('role','presentation');
-  const controller=new AbortController();let blobUrl=null,cancelled=false;
-  const timeout=setTimeout(()=>controller.abort(),20000);
-  const cleanup=()=>{clearTimeout(timeout);if(blobUrl){URL.revokeObjectURL(blobUrl);blobUrl=null;}};
+  let controller,blobUrl=null,cancelled=false,timeout,task;
+  const cleanup=()=>{
+   clearTimeout(timeout);if(blobUrl){URL.revokeObjectURL(blobUrl);blobUrl=null;}
+   if(task && !task.finished){task.finished=true;if(task.active)ignBusy--;pumpIgn();}
+  };
   tile.onload=()=>{cleanup();if(!cancelled)done(null,tile);};
   tile.onerror=()=>{cleanup();if(!cancelled)done(new Error('IGN tile image failed'),tile);};
-  tile.cancelRequest=()=>{cancelled=true;controller.abort();cleanup();};
-  fetch(this.getTileUrl(coords),{signal:controller.signal,credentials:'omit'}).then(response=>{
-   if(response.status===404)return null;
-   if(!response.ok)throw new Error('IGN service: '+response.status);
-   return response.blob();
-  }).then(blob=>{
-   if(cancelled)return;
-   if(blob){blobUrl=URL.createObjectURL(blob);tile.src=blobUrl;}
-   else tile.src=L.Util.emptyImageUrl;
-  }).catch(error=>{cleanup();if(!cancelled)done(error,tile);});
-  return tile;
+  tile.cancelRequest=()=>{
+   cancelled=true;if(task){task.cancelled=true;const i=ignQueue.indexOf(task);if(i>=0)ignQueue.splice(i,1);}
+   if(controller)controller.abort();cleanup();
+  };
+  tile.retryFetch=()=>{
+   task={cancelled:false,active:false,finished:false,start:()=>{
+    controller=new AbortController();timeout=setTimeout(()=>controller.abort(),30000);
+    fetch(this.getTileUrl(coords),{signal:controller.signal,credentials:'omit'}).then(response=>{
+     if(response.status===404)return null;
+     if(!response.ok)throw new Error('IGN service: '+response.status);
+     return response.blob();
+    }).then(blob=>{
+     if(cancelled)return;
+     if(blob){blobUrl=URL.createObjectURL(blob);tile.src=blobUrl;}
+     else tile.src=L.Util.emptyImageUrl;
+    }).catch(error=>{cleanup();if(!cancelled)done(error,tile);});
+   }};
+   ignQueue.push(task);pumpIgn();
+  };
+  tile.retryFetch();return tile;
  };
+ layer.retryTile=tile=>tile.retryFetch();
  layer.on('tileunload tileabort',e=>{if(e.tile.cancelRequest)e.tile.cancelRequest();});
 }
 // Share a modest queue across AHN generations: at most three active images and
