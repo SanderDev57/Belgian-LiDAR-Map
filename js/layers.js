@@ -32,7 +32,7 @@ const nlPhotoCredit = '© <a href="https://www.beeldmateriaal.nl">Samenwerkingsv
 const frCredit = '© <a href="https://cartes.gouv.fr">IGN / Géoplateforme</a> · <a href="https://www.etalab.gouv.fr/licence-ouverte-open-licence/">Licence Ouverte 2.0</a> · source dates vary';
 function ignTile(layer,matrix,maxNativeZoom,zIndex,pane='terrainPane',format='image/png',style='normal',minZoom=0) {
  return L.tileLayer('https://data.geopf.fr/wmts?SERVICE=WMTS&VERSION=1.0.0&REQUEST=GetTile&LAYER='+layer+'&STYLE='+style+'&FORMAT='+encodeURIComponent(format)+'&TILEMATRIXSET='+matrix+'&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}',{
-  ...common,pane,bounds:frBounds,noWrap:true,maxNativeZoom,minZoom,zIndex,attribution:frCredit,coverageCountry:'FR',allowMissing:true
+  ...common,pane,bounds:frBounds,noWrap:true,maxNativeZoom,minZoom,zIndex,attribution:frCredit,coverageCountry:'FR',allowMissing:layer.includes('LIDAR-HD_MNT')
  });
 }
 const ahnStyle = {"method":"v2","parameters":{"fill":{"type":"channelMap","channelMap":[{"expression":"255","channel":"red"},{"expression":"255","channel":"green"},{"expression":"255","channel":"blue"}]},"shade":{"bandNumber":1,"exaggerate":1,"azimuth":315,"angle":45,"factor":1},"alphaMultiplier":1}};

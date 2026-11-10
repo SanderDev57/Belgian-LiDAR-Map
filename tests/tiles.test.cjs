@@ -5,7 +5,7 @@ function harness(plan=()=> 'load',fetchPlan=()=>({status:200,ok:true,headers:{ge
  const dataset={},events={},app={};
  const timeout=(fn,ms=0)=>{timers.set(++id,{at:now+ms,fn});return id};
  const ctx={window:{BelgianLidar:app,navigator:{onLine:true},addEventListener(n,fn){events[n]=fn}},
-  document:{getElementById:()=>({dataset}),createElement(){let generation=0;return {setAttribute(){},set src(url){this._src=url;const g=++generation;if(url.startsWith('data:'))return;starts.push({url,at:now});const action=plan(url);if(action!=='hang')timeout(()=>{if(g===generation)this[action==='error'?'onerror':'onload']?.()},300)},get src(){return this._src}}}},
+  document:{getElementById:()=>({dataset}),createElement(){let generation=0;return {dataset:{},setAttribute(){},set src(url){this._src=url;const g=++generation;if(url.startsWith('data:'))return;starts.push({url,at:now});const action=plan(url);if(action!=='hang')timeout(()=>{if(g===generation)this[action==='error'?'onerror':'onload']?.()},300)},get src(){return this._src}}}},
   URL:class extends URL{static createObjectURL(){created++;return 'blob:test'}static revokeObjectURL(){revoked++}},
   Date:class extends Date{static now(){return now}},Math:Object.assign(Object.create(Math),{random:()=>0}),AbortController,
   setTimeout:timeout,clearTimeout:n=>timers.delete(n),L:{Util:{emptyImageUrl:'data:transparent'}},

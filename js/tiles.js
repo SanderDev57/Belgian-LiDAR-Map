@@ -58,7 +58,7 @@ function install(layer) {
    if(cancelled)return;
    const id=++run;
    task={priority:layer.options.pane==='backgroundPane'?0:1,provider:p,ready:Date.now()+(attempt?[1200,3500][attempt-1]+Math.random()*250:0),active:false,released:false,cancelled:false,start(){
-    let settled=false;
+    let settled=false;tile.dataset.requestAttempts=String(attempt+1);
     const finish=(error,permanent=false)=>{
      if(settled || cancelled || id!==run)return;settled=true;clear();
      if(controller){controller.abort();controller=null;}
@@ -66,7 +66,7 @@ function install(layer) {
      if(p.failures>=3)p.next=Math.max(p.next,Date.now()+5000);
      release(task);
      if(error && !permanent && attempt<MAX_RETRIES){attempt++;tile.src=L.Util.emptyImageUrl;request();}
-     else {tile.tileRequestFailed=!!error;done(error,tile);}
+     else {tile.tileRequestFailed=!!error;if(error)tile.dataset.requestError=error.message||'Tile unavailable';else delete tile.dataset.requestError;done(error,tile);}
     };
     tile.onload=()=>finish(null);tile.onerror=()=>finish(new Error('Tile image unavailable'));
     timer=setTimeout(()=>finish(new Error('Map service timed out')),TIMEOUT);
