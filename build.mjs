@@ -12,7 +12,8 @@ const stylesheet = await read('css/styles.css');
 html = html.replace('<link rel="stylesheet" href="css/styles.css">',() => '<style>\n'+stylesheet+'\n</style>');
 for(const file of ['vendor/leaflet/leaflet.js','js/map.js','js/layers.js','js/comparison.js','js/app.js']) {
  const code = (await read(file)).replace(/\/\/# sourceMappingURL=[^\r\n]*/g,'');
- html = html.replace('<script src="'+file+'"></script>',() => '<script>\n'+code+'\n</script>');
+ const scriptTag = new RegExp('<script src="'+file.replaceAll('.', '\\.')+'(?:\\?[^"]*)?"></script>');
+ html = html.replace(scriptTag,() => '<script>\n'+code+'\n</script>');
 }
 const licence = await read('LICENSE');
 html = html.replace('<!doctype html>','<!doctype html>\n<!-- Original application code licence:\n'+licence+'\n-->');
@@ -20,3 +21,4 @@ html = html.replace('<!doctype html>','<!doctype html>\n<!-- Original applicatio
 if(/(?:src|href)="(?:js|css|vendor)\//.test(html)) throw new Error('Unbundled local asset remains');
 await writeFile(new URL('Belgian-LiDAR-Map.html',root),html);
 console.log('Built Belgian-LiDAR-Map.html');
+
