@@ -17,13 +17,31 @@ function wms(url,layers,attribution,bounds,maxNativeZoom,pane,zIndex) {
  return L.tileLayer.wms(url,{...common,layers,styles:'',format:'image/png',transparent:true,
   version:'1.3.0',crs:L.CRS.EPSG3857,bounds,maxNativeZoom,noWrap:true,attribution,pane,zIndex});
 }
+// SPW's image export returns transparent tiles outside its true coverage, including
+// places inside its rectangular extent. Use Leaflet's normal image lifecycle/retry.
+const SpwLayer = L.TileLayer.extend({
+ getTileUrl(coords) {
+  const bounds = this._tileCoordsToBounds(coords);
+  const sw = L.CRS.EPSG3857.project(bounds.getSouthWest());
+  const ne = L.CRS.EPSG3857.project(bounds.getNorthEast());
+  const size = this.getTileSize();
+  const query = new URLSearchParams({f:'image',bbox:[sw.x,sw.y,ne.x,ne.y].join(','),
+   bboxSR:'3857',imageSR:'3857',size:size.x+','+size.y,format:'png32',transparent:'true',layers:'show:0',dpi:'96'});
+  return this._url+'?'+query;
+ }
+});
+function spw(path,options) {
+ return new SpwLayer('https://geoservices.wallonie.be/arcgis/rest/services/'+path+'/MapServer/export',{
+  ...common,noWrap:true,...options
+ });
+}
 const aerialFl = L.tileLayer('https://geo.api.vlaanderen.be/OMWRGBMRVL/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=omwrgbmrvl&STYLE=&FORMAT=image/png&TILEMATRIXSET=GoogleMapsVL&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}', {
  ...common,pane:'backgroundPane',maxNativeZoom:21,zIndex:30,bounds:[[50.685,2.53],[51.52,5.92]],
  attribution:'Bron: Luchtopnamen <a href="https://www.vlaanderen.be/datavindplaats/catalogus/wmts-orthofotomozaiek-middenschalig-winteropnamen-kleur-meest-recent-vlaanderen">Digitaal Vlaanderen</a>'
 });
-const aerialWa = L.tileLayer.wms('https://geoservices.wallonie.be/arcgis/services/IMAGERIE/ORTHO_2023_ETE/MapServer/WMSServer', {
- ...common,pane:'backgroundPane',maxNativeZoom:21,zIndex:20,bounds:[[49.49,2.84],[50.85,6.5]],
- layers:'0',format:'image/png',transparent:true,version:'1.1.1',attribution:'© <a href="https://geoportail.wallonie.be/catalogue/ad55c2ce-62ad-4c3c-b3cf-8fbc270a6b6e.html">SPW · Orthophotos 2023 Été</a> · <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>'
+const aerialWa = spw('IMAGERIE/ORTHO_2023_ETE',{
+ pane:'backgroundPane',maxNativeZoom:21,zIndex:20,bounds:[[49.49,2.84],[50.85,6.5]],
+ attribution:'© <a href="https://geoportail.wallonie.be/catalogue/ad55c2ce-62ad-4c3c-b3cf-8fbc270a6b6e.html">SPW · Orthophotos 2023 Été</a> · <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>'
 });
 function fl(name) {
  return L.tileLayer('https://geo.api.vlaanderen.be/DHMV/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER='+name+'&STYLE=&FORMAT=image/png&TILEMATRIXSET=GoogleMapsVL&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}',{...common,zIndex:40,pane:'terrainPane',maxNativeZoom:21,attribution:flCredit,bounds:[[50.68,2.53],[51.52,5.95]]});
@@ -32,7 +50,7 @@ const terrainSources = [
  // Fine sources cover coarser ones; transparent edges and missing tiles reveal the fallback.
  wms('https://sgx.geodatenzentrum.de/wms_basemapde_schummerung','de_basemapde_web_raster_hillshade',deCredit,deBounds,14,'terrainPane',10),
  wms('https://geo4.service24.rlp.de/wms/shade1m.fcgi','rp_shade1m',rlpCredit,rlpBounds,17,'terrainPane',20),
- L.tileLayer.wms('https://geoservices.wallonie.be/arcgis/services/RELIEF/WALLONIE_MNT_2021_2022_HILLSHADE/MapServer/WMSServer',{...common,layers:'0',format:'image/png',transparent:true,version:'1.1.1',pane:'terrainPane',zIndex:30,maxNativeZoom:21,attribution:waCredit,bounds:[[49.49,2.84],[50.85,6.5]]}),
+ spw('RELIEF/WALLONIE_MNT_2021_2022_HILLSHADE',{pane:'terrainPane',zIndex:30,maxNativeZoom:21,attribution:waCredit,bounds:[[49.49,2.84],[50.85,6.5]]}),
  fl('DHMV_II_HILL_25cm'),
  wms('https://www.wms.nrw.de/geobasis/wms_nw_dgm-schummerung','nw_dgm-schummerung_pan',nrwCredit,nrwBounds,19,'terrainPane',50)
 ];

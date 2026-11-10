@@ -84,3 +84,5 @@ The source provider receives IP/browser and tile requests only when satellite/ae
 
 ## Scope of the permission review
 See DATA_PERMISSIONS.md. Reviewed for this application's ordinary public interactive display, on 10 November 2026. This does not declare every source public domain, grant unlimited service traffic, or license raw data extraction under MIT. Operator-specific hosting disclosures remain the deployer's responsibility.
+
+Wallonia terrain and aerial tiles use SPW’s public ArcGIS REST image-export endpoints under the same SPW dataset and service conditions. The image response is transparent outside actual coverage, preserving the composite fallback. Leaflet’s ordinary image loading, cancellation and bounded retry are retained. No source imagery is downloaded in bulk or rehosted.

@@ -58,3 +58,5 @@ Rebuild using `node build.mjs`. Check startup before/after Open map; Belgium, NR
 
 ## Contributing
 See [CONTRIBUTING.md](CONTRIBUTING.md).
+
+Wallonia terrain and aerial tiles use SPW’s public ArcGIS REST image-export endpoints under the same SPW dataset and service conditions. The image response is transparent outside actual coverage, preserving the composite fallback. Leaflet’s ordinary image loading, cancellation and bounded retry are retained. No source imagery is downloaded in bulk or rehosted.
